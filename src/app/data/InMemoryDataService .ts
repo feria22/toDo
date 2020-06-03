@@ -26,79 +26,79 @@ export class InMemHeroService implements InMemoryDbService {
       {
         id: 1,
         title: 'Zatankować samochód',
-        priority: 2,
+        priority: 3,
         completed: false,
-        category: 9,
+        category: 10,
         date: new Date('2020-06-10')
       },
 
       {
         id: 2,
         title: 'Prześlać raporty do kierownika działu',
-        priority: 0,
+        priority: 1,
         completed: false,
-        category: 0,
+        category: 1,
         date: new Date('2020-04-11')
       },
 
       {
         id: 3,
         title: 'Posprzątać w pokoju',
-        priority: 2,
+        priority: 3,
         completed: true,
-        category: 1
+        category: 2
       },
 
       {
         id: 4,
         title: 'Pójść na spacer do parku z rodziną',
-        priority: 1,
+        priority: 2,
         completed: false,
-        category: 1,
+        category: 2,
         date: new Date('2020-08-17')
       },
       {
         id: 5,
         title: 'Naucz się Angulara',
         completed: false,
-        category: 2
+        category: 3
       },
       {
         id: 6,
         title: 'Pójść na meet-up z programowania',
-        priority: 1,
+        priority: 2,
         completed: true,
-        category: 2,
+        category: 3,
         date: new Date('2020-06-11')
       },
 
       {
         id: 7,
         title: 'Znajdź bilety do Turcji, wybierz hotel',
-        priority: 2,
+        priority: 3,
         completed: false,
-        category: 3
+        category: 4
       },
       {
         id: 8,
         title: 'Zrób obiad dla całej rodziny',
         completed: false,
-        category: 5
+        category: 6
       },
       {
         id: 9,
         title: 'Podciągnij 10 razy',
-        priority: 2,
+        priority: 3,
         completed: false,
-        category: 4,
+        category: 5,
         date: new Date('2020-06-12')
       },
       {
         id: 10,
         title: 'Przebiec 100 m',
-        priority: 0,
+        priority: 1,
         completed: true,
-        category: 4
+        category: 5
       },
 
       {
@@ -110,16 +110,16 @@ export class InMemHeroService implements InMemoryDbService {
       {
         id: 12,
         title: 'Pójść na wykładu „Jak nauczyć się programować na Java"',
-        priority: 1,
+        priority: 2,
         completed: false,
-        category: 2
+        category: 3
       },
       {
         id: 13,
         title: 'Zrobić zakupy',
-        priority: 2,
+        priority:3,
         completed: false,
-        category: 5,
+        category: 6,
         date: new Date('2020-06-11')
       },
 
@@ -127,13 +127,13 @@ export class InMemHeroService implements InMemoryDbService {
         id: 14,
         title: 'Zrobić spotkanie na temat wszystkich projektów',
         completed: true,
-        category: 0
+        category: 1
       },
 
       {
         id: 15,
         title: 'Zdać egzamin',
-        priority: 2,
+        priority: 3,
         completed: true
       },
 
@@ -141,25 +141,25 @@ export class InMemHeroService implements InMemoryDbService {
       {
         id: 16,
         title: 'Sprawdzić pieniądze w banku',
-        priority: 3,
+        priority: 4,
         completed: false,
-        category: 6
+        category: 7
       },
 
       {
         id: 17,
         title: 'Poproś o podwyżkę w pracy',
-        priority: 2,
+        priority: 3,
         completed: false,
-        category: 6
+        category: 7
       },
 
       {
         id: 18,
         title: 'Zroobić badania',
-        priority: 3,
+        priority: 4,
         completed: false,
-        category: 8,
+        category: 9,
         date: new Date('2020-12-11')
 
       },
@@ -167,9 +167,9 @@ export class InMemHeroService implements InMemoryDbService {
       {
         id: 19,
         title: 'Przeczytać opinie o Mi band 5',
-        priority: 0,
+        priority: 1,
         completed: false,
-        category: 7,
+        category: 8,
         date: new Date('2020-08-11')
 
       },
@@ -177,9 +177,9 @@ export class InMemHeroService implements InMemoryDbService {
       {
         id: 20,
         title: 'Pilka nożna',
-        priority: 0,
+        priority: 1,
         completed: false,
-        category: 4,
+        category: 5,
         date: new Date('2020-06-17')
 
       }

@@ -5,15 +5,20 @@ import { AppComponent } from './app.component';
 import {HttpClientModule} from "@angular/common/http";
 import {HttpClientInMemoryWebApiModule} from "angular-in-memory-web-api";
 import { InMemHeroService } from './data/InMemoryDataService ';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CategoryComponent } from './views/category/category.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CategoryComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(InMemHeroService,{ dataEncapsulation: false })
+    HttpClientInMemoryWebApiModule.forRoot(InMemHeroService,{ dataEncapsulation: false }),
+    BrowserAnimationsModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent]

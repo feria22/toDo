@@ -12,7 +12,8 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
  */
-/*     brand Colors              */
+
+
 .card {
   font-size: .875rem;
 }
@@ -19754,3 +19755,6 @@ Copyright (c) 2015 Daniel Eden
 }
 
 /*# sourceMappingURL=dashboard-free.css.map */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
