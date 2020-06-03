@@ -2,14 +2,14 @@ import { InMemoryDbService } from 'angular-in-memory-web-api';
 import {Observable} from "rxjs";
 
 export class InMemHeroService implements InMemoryDbService {
-  createDb(basename):Observable<any> {
+  createDb() {
     let category=[
       {id: 1, title: 'Praca'},
-      {id: 2, title: 'Rodzina'},
       {id: 3, title: 'Studia'},
+      {id: 2, title: 'Rodzina'},
       {id: 4, title: 'Urlop'},
-      {id: 5, title: 'Sport'},
       {id: 6, title: 'Jedzenie'},
+      {id: 5, title: 'Sport'},
       {id: 7, title: 'Pieniądze'},
       {id: 8, title: 'Gadżety'},
       {id: 9, title: 'Zdrowie'},
@@ -185,7 +185,7 @@ export class InMemHeroService implements InMemoryDbService {
       }
 
     ];
-    return basename;
+    return {priorities,category,tasks};
   }
 
 }

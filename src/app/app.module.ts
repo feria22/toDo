@@ -13,9 +13,11 @@ import { InMemHeroService } from './data/InMemoryDataService ';
   imports: [
     BrowserModule,
     HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(InMemHeroService)
+    HttpClientInMemoryWebApiModule.forRoot(InMemHeroService,{ dataEncapsulation: false })
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+}
