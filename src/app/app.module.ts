@@ -7,11 +7,13 @@ import {HttpClientInMemoryWebApiModule} from "angular-in-memory-web-api";
 import { InMemHeroService } from './data/InMemoryDataService ';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CategoryComponent } from './views/category/category.component';
+import { TaskComponent } from './views/task/task.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CategoryComponent
+    CategoryComponent,
+    TaskComponent
   ],
   imports: [
     BrowserModule,
