@@ -15,8 +15,8 @@ export class CategoryComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.load.data$.subscribe(value => {
-        this.categories = value[2]
+    this.load.data$.subscribe(([tasks, priorities, categories]) => {
+        this.categories = categories
       }
     )
   }

@@ -15,8 +15,8 @@ export class TaskComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.load.data$.subscribe(value => {
-      this.tasks = value[0]
+    this.load.data$.subscribe(([tasks, priorities, categories])=> {
+      this.tasks = tasks
       this.isLoading = false
     }
   )

@@ -25,10 +25,10 @@ export class LoadingService {
       this.tasks$,
       this.priorities$,
       this.categories$)
-      .subscribe((value) => {
-        for(let task of value[0] ) {
+      .subscribe(( [tasks, priorities, categories] ) => {
+        for(let task of tasks ) {
           if (task.priority) {
-            for (let priority of value[1]) {
+            for (let priority of priorities) {
               switch (task.priority) {
                 case priority.id: {
                   task.priority = priority
@@ -39,7 +39,7 @@ export class LoadingService {
           }
           else task.priority=''
           if (task.category) {
-            for (let category of value[2]) {
+            for (let category of categories) {
               switch (task.category) {
                 case category.id: {
                   task.category = category
@@ -50,46 +50,12 @@ export class LoadingService {
           }
           else task.category=''
         }
-        this.tasks = value[0]
+        this.tasks = tasks
         this.isLoading=false
         console.log('loading')
-        this.data$.next(value)
+        this.data$.next([tasks, priorities, categories])
       })
   }
-
-    //
-    // forkJoin< Task[], Priority[], Category[]>(
-    //   this.tasks$,
-    //   this.priorities$,
-    //   this.categories$)
-    //   .subscribe((value) => {
-    //     for(let task of value[0] ) {
-    //       if (task.priority) {
-    //         for (let priority of value[1]) {
-    //           switch (task.priority) {
-    //             case priority.id: {
-    //               task.priority = priority
-    //               break
-    //             }
-    //           }
-    //         }
-    //       }
-    //       else task.priority=''
-    //       if (task.category) {
-    //         for (let category of value[2]) {
-    //           switch (task.category) {
-    //             case category.id: {
-    //               task.category = category
-    //               break
-    //             }
-    //           }
-    //         }
-    //       }
-    //       else task.category=''
-    //     }
-    //     this.tasks = value[0]
-    //     this.isLoading=false
-    //   })
 
 
 }
