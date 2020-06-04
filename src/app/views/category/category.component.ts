@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
-import {Observable} from "rxjs";
 import {Category} from "../../model/category";
-import {HttpService} from "../../services/http.service";
+import {LoadingService} from "../../services/loading.service";
 
 @Component({
   selector: 'app-category',
@@ -10,15 +8,17 @@ import {HttpService} from "../../services/http.service";
   styleUrls: ['./category.component.sass']
 })
 export class CategoryComponent implements OnInit {
-  categories$: Observable<Category[]>
+  categories: Category[]
 
   constructor(
-    private http : HttpService
+    private load: LoadingService
   ) { }
 
   ngOnInit(): void {
-    this.categories$ = this.http.getAll('categories')
-
+    this.load.data$.subscribe(value => {
+        this.categories = value[2]
+      }
+    )
   }
 
 }
