@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import {Observable} from "rxjs";
 import {Category} from "../../model/category";
 import {HttpService} from "../../services/http.service";
-import {log} from "util";
 
 @Component({
   selector: 'app-category',

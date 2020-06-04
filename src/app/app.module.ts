@@ -8,7 +8,11 @@ import { InMemHeroService } from './data/InMemoryDataService ';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CategoryComponent } from './views/category/category.component';
 import { TaskComponent } from './views/task/task.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
+const Materialize = [
+  MatProgressSpinnerModule
+]
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,7 +24,10 @@ import { TaskComponent } from './views/task/task.component';
     HttpClientModule,
     HttpClientInMemoryWebApiModule.forRoot(InMemHeroService,{ dataEncapsulation: false }),
     BrowserAnimationsModule,
-
+    Materialize
+  ],
+  exports:[
+    Materialize
   ],
   providers: [],
   bootstrap: [AppComponent]

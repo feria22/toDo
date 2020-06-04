@@ -2,15 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import {HttpService} from "../../services/http.service";
 import {Observable, of, forkJoin} from "rxjs";
 import {Task} from "../../model/task";
-import {delay, mergeMap, tap, concatAll, mergeAll} from "rxjs/operators";
-import {CategoryComponent} from "../category/category.component";
+
 import {Priority} from "../../model/priority";
 import {Category} from "../../model/category";
-
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 @Component({
   selector: 'app-task',
   templateUrl: './task.component.html',
-  styleUrls: ['./task.component.sass']
+  styleUrls: ['./task.component.scss']
 })
 export class TaskComponent implements OnInit {
   tasks$: Observable<Task[]> = this.http.getAll('tasks')
@@ -19,7 +18,7 @@ export class TaskComponent implements OnInit {
   priorities: Priority[]
   categories$: Observable<Category[]> = this.http.getAll('categories')
   categories: Category[]
-
+  isLoading: boolean = true
   constructor(
     private http:HttpService
   ) { }
@@ -56,6 +55,7 @@ export class TaskComponent implements OnInit {
           else task.category=''
         }
         this.tasks = value[0]
+        this.isLoading=false
    })
 
 }
