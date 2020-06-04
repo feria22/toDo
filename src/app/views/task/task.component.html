@@ -10,12 +10,12 @@
         <th>Kategoria</th>
         </thead>
         <tbody>
-        <tr *ngFor="let task of (tasks$ | async);let i =index">
+        <tr *ngFor="let task of (tasks );let i =index">
           <td>{{ i+ 1}}</td>
           <td>{{task.title}}</td>
           <td>{{task.date|date: "dd.MM.yy"}}</td>
-          <td>{{task.priority}}</td>
-          <td>{{task.category}}</td>
+          <td>{{task.priority.title || ''}}</td>
+          <td>{{task.category.title || ''}}</td>
         </tr>
         </tbody>
       </table>

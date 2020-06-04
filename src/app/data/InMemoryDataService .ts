@@ -2,8 +2,9 @@ import { InMemoryDbService } from 'angular-in-memory-web-api';
 import {Observable} from "rxjs";
 
 export class InMemHeroService implements InMemoryDbService {
+  // @ts-ignore
   createDb() {
-    let category=[
+    let categories=[
       {id: 1, title: 'Praca'},
       {id: 3, title: 'Studia'},
       {id: 2, title: 'Rodzina'},
@@ -185,7 +186,7 @@ export class InMemHeroService implements InMemoryDbService {
       }
 
     ];
-    return {priorities,category,tasks};
+    return {priorities,categories,tasks};
   }
 
 }

@@ -15,10 +15,7 @@ export class AppComponent implements OnInit{
   title = 'toDo';
 
   ngOnInit(): void {
-    this.http.getAll('category')
-      .subscribe((elem)=>
-        console.log(elem)
-      )
+
   }
 
 }

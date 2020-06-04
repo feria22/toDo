@@ -5,8 +5,8 @@ import { Category } from "./category";
     id:number;
     title:string;
     completed:boolean;
-    priority?: Priority;
-    category?: Category;
+    priority?: Priority | number | string;
+    category?: Category | number | string;
     date?: Date
 
     constructor(id: number, title: string, completed: boolean, priority?: Priority, category?: Category, date?: Date) {
