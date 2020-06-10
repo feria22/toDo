@@ -17,6 +17,7 @@ export class LoadingService {
   categories: Category[]
   isLoading: boolean = true
   data$= new Subject();
+  public categoryId:Subject<number>= new Subject()
   constructor(
     private http:HttpService
 
@@ -55,6 +56,7 @@ export class LoadingService {
         console.log('loading')
         this.data$.next([tasks, priorities, categories])
       })
+
   }
 
 

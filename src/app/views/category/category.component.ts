@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import {Category} from "../../model/category";
 import {LoadingService} from "../../services/loading.service";
+import {TaskComponent} from "../task/task.component";
 
 @Component({
   selector: 'app-category',
@@ -8,10 +9,13 @@ import {LoadingService} from "../../services/loading.service";
   styleUrls: ['./category.component.sass']
 })
 export class CategoryComponent implements OnInit {
-  categories: Category[]
 
+
+  categories: Category[]
+  // activeId:number
   constructor(
-    private load: LoadingService
+    private load: LoadingService,
+    // private tasks: TaskComponent
   ) { }
 
   ngOnInit(): void {
@@ -21,4 +25,7 @@ export class CategoryComponent implements OnInit {
     )
   }
 
+  onCategoryClick(id:number) {
+    this.load.categoryId.next(id)
+  }
 }
