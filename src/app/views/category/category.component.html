@@ -7,13 +7,13 @@
   </a></div>
   <div class="sidebar-wrapper">
     <ul class="nav">
-      <li class="nav-item active " (click)="onCategoryClick(0)">
+      <li class="nav-item active " (click)="onCategoryClick()">
         <a class="nav-link" href="#">
         <p>Wszystko</p>
         </a>
       </li>
-      <li class="nav-item " *ngFor="let category of categories " (click)="onCategoryClick(category.id)">
-        <a class="nav-link" href="#">
+      <li class="nav-item "  [class.active]="category===selectedCategory" *ngFor="let category of categories " (click)="onCategoryClick(category)">
+        <a class="nav-link" href="#" >
           <p>{{category.title}}</p>
         </a>
       </li>

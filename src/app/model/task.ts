@@ -6,7 +6,7 @@ import { Category } from "./category";
     title:string;
     completed:boolean;
     priority?: Priority | number | string;
-    category?: Category | number | string;
+    category?: Category |any;
     date?: Date
 
     constructor(id: number, title: string, completed: boolean, priority?: Priority, category?: Category, date?: Date) {

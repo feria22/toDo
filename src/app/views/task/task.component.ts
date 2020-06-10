@@ -36,7 +36,7 @@ export class TaskComponent implements OnInit {
   }
 
   filterForTask(id:number){
-    console.log(id)
-    id === 0 ? this.taskForView = this.tasks : this.taskForView = this.tasks.filter(x=> x.category?.id === id)
+    if(id===0) this.taskForView = this.tasks
+    else this.taskForView = this.tasks.filter(x => x.category.id === id)
   }
 }

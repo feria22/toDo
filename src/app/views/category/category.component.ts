@@ -12,6 +12,7 @@ export class CategoryComponent implements OnInit {
 
 
   categories: Category[]
+  selectedCategory: Category
   // activeId:number
   constructor(
     private load: LoadingService,
@@ -25,7 +26,11 @@ export class CategoryComponent implements OnInit {
     )
   }
 
-  onCategoryClick(id:number) {
-    this.load.categoryId.next(id)
+  onCategoryClick(category?:Category) {
+    if (category !== undefined) {
+      this.selectedCategory = category
+      this.load.categoryId.next(category.id)
+    }
+    else this.load.categoryId.next(0)
   }
 }

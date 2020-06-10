@@ -8,14 +8,27 @@
         <th>Kiedy</th>
         <th>Prioritet</th>
         <th>Kategoria</th>
+        <th>Status</th>
+
         </thead>
         <tbody>
         <tr *ngFor="let task of taskForView;let i =index">
           <td>{{ i+ 1}}</td>
           <td>{{task.title}}</td>
-          <td>{{task.date|date: "dd.MM.yy"}}</td>
-          <td>{{task.priority.title || ''}}</td>
-          <td>{{task.category.title || ''}}</td>
+          <td>{{(task.date | date: "dd.MM.yy" )|| 'Bez daty'}}</td>
+          <td>{{task.priority.title || 'Bez prioriteta'}}</td>
+          <td>{{task.category.title || 'Bez categorji'}}</td>
+          <td>
+            <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="checkbox" value="" [checked]="task.completed">
+              <span class="form-check-sign">
+                <span class="check"></span>
+              </span>
+            </label>
+          </div>
+          </td>
+
         </tr>
         </tbody>
       </table>

@@ -22,6 +22,9 @@ export class LoadingService {
     private http:HttpService
 
   ) {
+
+
+
     forkJoin< Task[], Priority[], Category[]>(
       this.tasks$,
       this.priorities$,
@@ -58,6 +61,11 @@ export class LoadingService {
       })
 
   }
-
+  loadingData():Observable<[Task[], Priority[], Category[]]>{
+    let tasks$ = this.http.getAll('tasks')
+    let priorities$ = this.http.getAll('priorities')
+    let categories$ = this.http.getAll('categories')
+    return forkJoin([tasks$, priorities$, categories$]);
+  }
 
 }
