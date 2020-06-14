@@ -1,37 +1,106 @@
 <div class="col-12" *ngIf="!isLoading; else loading">
   <div class="card">
-    <div class="card-body table-responsive">
-      <table class="table table-hover">
-        <thead class="text-warning">
-        <th></th>
-        <th>Nazwa</th>
-        <th>Kiedy</th>
-        <th>Prioritet</th>
-        <th>Kategoria</th>
-        <th>Status</th>
+    <div class="card-header card-header-warning">
+      <h4 class="card-title">
+        Lista zadań
+      </h4>
+    </div>
+    <div class="card-body table-responsive" *ngIf="taskForView.length > 0; else notFound">
 
-        </thead>
-        <tbody>
-        <tr *ngFor="let task of taskForView;let i =index">
-          <td>{{ i+ 1}}</td>
-          <td>{{task.title}}</td>
-          <td>{{(task.date | date: "dd.MM.yy" )|| 'Bez daty'}}</td>
-          <td>{{task.priority.title || 'Bez prioriteta'}}</td>
-          <td>{{task.category.title || 'Bez categorji'}}</td>
-          <td>
-            <div class="form-check">
-            <label class="form-check-label">
-              <input class="form-check-input" type="checkbox" value="" [checked]="task.completed">
-              <span class="form-check-sign">
-                <span class="check"></span>
-              </span>
-            </label>
-          </div>
+      <table class="col-12" [dataSource]="dataSource" mat-table matSort>
+
+        <!--        priority color-->
+        <ng-container matColumnDef="color">
+          <th *matHeaderCellDef mat-header-cell></th>
+          <td class="col-color " *matCellDef="let task" [style.background-color]="getPriorityColor(task)"
+              mat-cell></td>
+        </ng-container>
+
+        <!--        index-->
+        <ng-container matColumnDef="id">
+          <th *matHeaderCellDef mat-header-cell></th>
+          <td  class="col-index text-center" *matCellDef="let index = index;" mat-cell>
+            {{index + 1}}
           </td>
+        </ng-container>
 
-        </tr>
-        </tbody>
+        <!--        name of task-->
+        <ng-container matColumnDef="title" >
+          <th *matHeaderCellDef mat-header-cell mat-sort-header >Nazwa</th>
+          <td class="col-name" *matCellDef="let task" [class.completed]="task.completed" mat-cell>
+            {{task.title}}
+          </td>
+        </ng-container>
+
+        <!--       date for task -->
+        <ng-container matColumnDef="date">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Kiedy</th>
+          <td  class="col-date" *matCellDef="let task" [ngClass]="{'completed': task.completed, 'without': task.date == null}" mat-cell>
+        {{(task.date | date: "dd.MM.yy" )|| 'Bez daty'}}
+        </td>
+        </ng-container>
+
+        <!--        priority-->
+        <ng-container matColumnDef="priority">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Prioritet</th>
+          <td class="col-priority" *matCellDef="let task" [ngClass]="{'completed': task.completed, 'without': task.priority.id == null}" mat-cell>
+            {{task.priority.title|| 'Bez prioriteta'}}
+          </td>
+        </ng-container>
+
+        <!--        category-->
+        <ng-container matColumnDef="category">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Kategoria</th>
+          <td class="col-category" *matCellDef="let task" [ngClass]="{'completed': task.completed, 'without': task.category.id == null}" mat-cell>
+            {{task.category.title || 'Bez categorji'}}
+          </td>
+        </ng-container>
+
+        <!--  thead-->
+        <tr *matHeaderRowDef="displayedColumns; " mat-header-row></tr>
+
+        <!--  row of table  -->
+        <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+
+        <!--        status-->
+<!--        <ng-container matColumnDef="category">-->
+<!--          <th *matHeaderCellDef mat-header-cell>Status</th>-->
+<!--          <td *matCellDef="let task" [ngClass]="{'completed': task.completed, 'without': task.category.id == null}" mat-cell>-->
+<!--            {{task.category.title || 'Bez categorji'}}-->
+<!--          </td>-->
+<!--        </ng-container>-->
+
+<!--        <thead class="text-warning">-->
+<!--        <th></th>-->
+<!--        <th>Nazwa</th>-->
+<!--        <th>Kiedy</th>-->
+<!--        <th>Prioritet</th>-->
+<!--        <th>Kategoria</th>-->
+<!--        <th>Status</th>-->
+
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        <tr *ngFor="let task of taskForView;let i =index"  [class.completed]="task.completed">-->
+<!--          <td>{{ i+ 1}}</td>-->
+<!--          <td>{{task.title}}</td>-->
+<!--          <td [class.without]="task.date==null"> {{(task.date | date: "dd.MM.yy" )|| 'Bez daty'}}</td>-->
+<!--          <td [class.without]="task.priority.id==null">{{task.priority.title || 'Bez prioriteta'}}</td>-->
+<!--          <td [class.without]="task.category.id==null">{{task.category.title || 'Bez categorji'}}</td>-->
+<!--          <td>-->
+<!--            <div class="form-check">-->
+<!--            <label class="form-check-label">-->
+<!--              <input class="form-check-input" type="checkbox" value="" [checked]="task.completed" (click)="task.completed=!task.completed">-->
+<!--              <span class="form-check-sign">-->
+<!--                <span class="check"></span>-->
+<!--              </span>-->
+<!--            </label>-->
+<!--          </div>-->
+<!--          </td>-->
+
+<!--        </tr>-->
+<!--        </tbody>-->
       </table>
+      <mat-paginator [pageSizeOptions]="[10,20,50,100]" showFirstLastButtons></mat-paginator>
     </div>
   </div>
 </div>
@@ -39,4 +108,7 @@
   <div class="loading">
     <mat-spinner></mat-spinner>
   </div>
+</ng-template>
+<ng-template #notFound>
+<p class="not-found">Nic nie zapłanowano</p>
 </ng-template>

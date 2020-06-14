@@ -12,7 +12,12 @@
         <p>Wszystko</p>
         </a>
       </li>
-      <li class="nav-item "  [class.active]="category===selectedCategory" *ngFor="let category of categories " (click)="onCategoryClick(category)">
+      <li
+        class="nav-item "
+        [class.active]="category===selectedCategory"
+        *ngFor="let category of categories "
+        (click)="onCategoryClick(category)"
+      >
         <a class="nav-link" href="#" >
           <p>{{category.title}}</p>
         </a>

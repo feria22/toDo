@@ -56,16 +56,16 @@ export class LoadingService {
         }
         this.tasks = tasks
         this.isLoading=false
-        console.log('loading')
+        // console.log('loading')
         this.data$.next([tasks, priorities, categories])
       })
 
   }
-  loadingData():Observable<[Task[], Priority[], Category[]]>{
-    let tasks$ = this.http.getAll('tasks')
-    let priorities$ = this.http.getAll('priorities')
-    let categories$ = this.http.getAll('categories')
-    return forkJoin([tasks$, priorities$, categories$]);
-  }
+  // loadingData():Observable<[Task[], Priority[], Category[]]>{
+  //   let tasks$ = this.http.getAll('tasks')
+  //   let priorities$ = this.http.getAll('priorities')
+  //   let categories$ = this.http.getAll('categories')
+  //   return forkJoin([tasks$, priorities$, categories$]);
+  // }
 
 }
