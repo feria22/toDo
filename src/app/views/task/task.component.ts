@@ -38,7 +38,7 @@ export class TaskComponent implements OnInit{
 
 
   ngOnInit(): void {
-    this.load.data$.subscribe(([tasks, priorities, categories]) => {
+    this.load.tasks$.subscribe((tasks) => {
         this.dataSource = new MatTableDataSource(tasks)
         this.tasks = tasks
         this.taskForView = this.tasks
