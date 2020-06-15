@@ -14,7 +14,7 @@
       </li>
       <li
         class="nav-item "
-        [class.active]="category===selectedCategory"
+        [class.card-header-warning]="category===selectedCategory"
         *ngFor="let category of categories "
         (click)="onCategoryClick(category)"
       >

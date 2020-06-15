@@ -12,31 +12,50 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
 import {MatTableModule} from "@angular/material/table";
+import { EditTaskDialogComponent } from './dialog/edit-task-dialog/edit-task-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatIconModule} from "@angular/material/icon";
+import {MatInputModule} from "@angular/material/input";
+import {MatButtonModule} from "@angular/material/button";
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 const Materialize = [
   MatProgressSpinnerModule,
   MatTableModule,
   MatPaginatorModule,
   MatSortModule,
-  BrowserAnimationsModule
+  BrowserAnimationsModule,
+  MatDialogModule,
+  MatIconModule,
+  MatInputModule,
+  MatButtonModule,
+  MatFormFieldModule,
 ]
 @NgModule({
   declarations: [
     AppComponent,
     CategoryComponent,
-    TaskComponent
+    TaskComponent,
+    EditTaskDialogComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     HttpClientInMemoryWebApiModule.forRoot(InMemHeroService,{ dataEncapsulation: false }),
     BrowserAnimationsModule,
-    Materialize
+    Materialize,
+    FormsModule,
+
   ],
-  exports:[
-    Materialize
-  ],
+  // exports:[
+  //   Materialize
+  // ],
   providers: [],
+  //for dynamic load
+  entryComponents:[
+    EditTaskDialogComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

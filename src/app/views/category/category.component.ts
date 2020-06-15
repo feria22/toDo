@@ -6,7 +6,7 @@ import {TaskComponent} from "../task/task.component";
 @Component({
   selector: 'app-category',
   templateUrl: './category.component.html',
-  styleUrls: ['./category.component.sass']
+  styleUrls: ['./category.component.scss']
 })
 export class CategoryComponent implements OnInit {
 

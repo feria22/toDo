@@ -6,6 +6,9 @@ import {CategoryComponent} from "../category/category.component";
 import { MatTableDataSource } from '@angular/material/table';
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
+import {MatDialog} from "@angular/material/dialog";
+import {EditTaskDialogComponent} from "../../dialog/edit-task-dialog/edit-task-dialog.component";
+import {HttpService} from "../../services/http.service";
 
 @Component({
   selector: 'app-task',
@@ -32,6 +35,8 @@ export class TaskComponent implements OnInit{
   // private sort: MatSort;
   constructor(
     private load: LoadingService,
+    private dialog : MatDialog,
+    private http:HttpService
 
 ) { }
 
@@ -74,7 +79,7 @@ export class TaskComponent implements OnInit{
     this.dataSource.sort =  this.sort;
     this.dataSource.paginator = this.paginator
 
-    this.dataSource.sortingDataAccessor=(task:Task,colName)=>{
+    this.dataSource.sortingDataAccessor=(task: Task, colName) =>{
       switch (colName) {
         case 'title': {
           return task.title
@@ -90,6 +95,14 @@ export class TaskComponent implements OnInit{
         }
       }
     }
+  }
+  editName(task: Task) {
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {data: [task, 'Edycja zadania'], autoFocus: false});
 
+    dialogRef.afterClosed().subscribe(result => {
+      if(result as Task){
+        this.http.updateTask(result).subscribe()
+      }
+    });
   }
 }
