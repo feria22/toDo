@@ -18,9 +18,9 @@
 
         <!--        index-->
         <ng-container matColumnDef="id">
-          <th *matHeaderCellDef mat-header-cell></th>
+          <th *matHeaderCellDef class="col-index text-center"  mat-header-cell>#</th>
           <td  class="col-index text-center" *matCellDef="let index = index;" mat-cell>
-            {{index + 1}}
+            {{paginatorX+index + 1}}
           </td>
         </ng-container>
 
@@ -100,7 +100,7 @@
 <!--        </tr>-->
 <!--        </tbody>-->
       </table>
-      <mat-paginator [pageSizeOptions]="[10,20,50,100]" showFirstLastButtons></mat-paginator>
+      <mat-paginator  (page)="pageEvent($event)" [pageSizeOptions]="[10,20,50,100]" showFirstLastButtons></mat-paginator>
     </div>
   </div>
 </div>
