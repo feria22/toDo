@@ -2,6 +2,11 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { Task } from 'src/app/model/task';
 import {HttpService} from "../../services/http.service";
 import { MatDialog, MAT_DIALOG_DATA,MatDialogRef } from '@angular/material/dialog';
+import {Category} from "../../model/category";
+import {Priority} from "../../model/priority";
+import {LoadingService} from "../../services/loading.service";
+import {Observer, Observable} from "rxjs";
+
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -9,6 +14,7 @@ import { MatDialog, MAT_DIALOG_DATA,MatDialogRef } from '@angular/material/dialo
   styleUrls: ['./edit-task-dialog.component.scss']
 })
 export class EditTaskDialogComponent implements OnInit {
+  minDate: Date;
 
   constructor
 (
@@ -16,32 +22,56 @@ export class EditTaskDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) private data: [Task, string], // data from parent component for dialog window
     private http:HttpService,
     private dialog: MatDialog, //for opening new dialog window
-) { }
+    private load :LoadingService
+) {
+    this.minDate = new Date(Date());
+  }
 
-  private dialogTitle: string;
-  private task: Task;
+  dialogTitle: string;
+  task: Task;
   tmpTitle: string;
-
+  categories:Observable<Category[]>=this.load.categories$;
+  priorities:Observable<Priority[]>=this.load.priorities$;
+  selectedCategory: Event | Category | number
+  selectedPriority: Event | Priority | number
+  date: Date
 
   ngOnInit() {
     this.task = this.data[0]; // task from parent
     this.dialogTitle = this.data[1]; // title from parent
     this.tmpTitle=  this.task.title;
-    // console.log(this.task);
-    // console.log(this.dialogTitle);
-
+    this.date = this.task.date
+    this.selectedCategory=this.task.category
+    this.selectedPriority=this.task.priority
   }
-  private onConfirm(): void {
+
+ onConfirm(): void {
     this.task.title = this.tmpTitle;
+
+    if (this.selectedCategory) {
+      if (this.selectedCategory == 0)  delete  this.task.category
+      else this.task.category = this.selectedCategory
+      // console.log(this.selectedCategory)
+    }
+
+    if (this.selectedPriority) {
+      if (this.selectedPriority==0) delete  this.task.priority
+      else this.task.priority = this.selectedPriority
+      // console.log(this.selectedPriority)
+    }
+
+    if(this.date) this.task.date = this.date
+    else delete  this.task.date
+
     this.dialogRef.close(this.task);
+    // console.log(this.task)
 
   }
 
 
-  private onCancel(): void {
+ onCancel(): void {
     this.dialogRef.close(null);
   }
-
 
 
 }

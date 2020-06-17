@@ -48,6 +48,7 @@ export class TaskComponent implements OnInit{
         this.tasks = tasks
         this.taskForView = this.tasks
         this.isLoading = false
+      // console.log(tasks)
       })
     this.load.categoryId.subscribe(id=> {
         this.filterForTask(id)
@@ -56,7 +57,7 @@ export class TaskComponent implements OnInit{
 
   filterForTask(id:number){
     if(id===0) this.taskForView = this.tasks
-    else this.taskForView = this.tasks.filter(x => x.category.id === id)
+    else this.taskForView = this.tasks.filter(x => x.category?.id === id)
     this.refreshTable()
   }
 
@@ -78,20 +79,20 @@ export class TaskComponent implements OnInit{
   private addTableObj() {
     this.dataSource.sort =  this.sort;
     this.dataSource.paginator = this.paginator
-
-    this.dataSource.sortingDataAccessor=(task: Task, colName) =>{
+    // console.log( this.dataSource)
+    this.dataSource.sortingDataAccessor=(item, colName) =>{
       switch (colName) {
         case 'title': {
-          return task.title
+          return item.title
         }
         case 'date': {
-          return task.date ? task.date : null
+          return item.date ? item.date : null
         }
         case 'priority': {
-          return task.priority ? task.priority.id : null;
+          return item.priority ? item.priority.id : null;
         }
         case 'category': {
-          return task.category ? task.category.title : null;
+          return item.category ? item.category.title : null;
         }
       }
     }

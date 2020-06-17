@@ -1,3 +1,7 @@
 .card-header-warning {
   background: linear-gradient(60deg, #ffa726, #fb8c00);
 }
+.mat-dialog-content{
+  display: flex;
+  flex-direction: column;
+}

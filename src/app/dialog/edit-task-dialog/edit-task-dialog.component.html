@@ -1,14 +1,14 @@
 <mat-dialog-content>
- <p mat-dialog-title>{{dialogTitle}}</p>
+  <p mat-dialog-title>{{dialogTitle}}</p>
   <mat-form-field>
     <mat-label>Nazwa zadamia</mat-label>
-    <input
+    <textarea matInput
       #inputTitle
       (keydown.enter)="onConfirm()"
 
       [(ngModel)]="tmpTitle"
 
-      matInput>
+     ></textarea>
     <button
       (click)="tmpTitle= ''"
 
@@ -19,6 +19,49 @@
       <mat-icon>clear</mat-icon>
     </button>
   </mat-form-field>
+
+  <mat-form-field>
+  <mat-label>Kategoria</mat-label>
+  <mat-select name="category"  [(value)]="selectedCategory">
+    <mat-option  value=0>Bez kategorji</mat-option>
+    <mat-option *ngFor="let category of categories| async" [value]="category" >
+     {{category.title}}
+    </mat-option>
+  </mat-select>
+  </mat-form-field>
+
+  <mat-form-field >
+    <mat-label>Prioritet</mat-label>
+    <mat-select name="priority"  [(value)]="selectedPriority">
+      <mat-option value=0>
+        <table><tr><td></td><td> Bez prioriteta</td></tr></table>
+      </mat-option>
+      <mat-option *ngFor="let priority of priorities | async"  [value]="priority">
+        <table>
+          <tr>
+            <td [style.background-color]='priority.color'></td>
+            <td>{{priority.title}}</td>
+          </tr>
+        </table>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Wybierz datę</mat-label>
+    <input matInput [min]="minDate" [matDatepicker]="picker" [(ngModel)]="date">
+    <button
+      (click)="date=null"
+
+      aria-label="Clear" class="size25" mat-button
+
+      mat-icon-button matSuffix>
+
+      <mat-icon>clear</mat-icon>
+    </button>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
 </mat-dialog-content>
 <mat-dialog-actions>
 

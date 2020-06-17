@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {forkJoin, Observable, Subject, of} from "rxjs";
+import {forkJoin, Observable, Subject, of, BehaviorSubject} from "rxjs";
 import {Task} from "../model/task";
 import {Priority} from "../model/priority";
 import {Category} from "../model/category";
@@ -15,8 +15,8 @@ export class LoadingService {
 
   categoryId: Subject<number> = new Subject()
   tasks$: Subject<Task[]> = new Subject();
-  priorities$: Subject<Priority[]> = new Subject();
-  categories$: Subject<Category[]>= new Subject();
+  priorities$: BehaviorSubject<Priority[]> = new BehaviorSubject([]);
+  categories$: BehaviorSubject<Category[]>= new BehaviorSubject([]);
   constructor(
     private http:HttpService
 
@@ -42,7 +42,7 @@ export class LoadingService {
                     }
                   }
                 }
-                else task.priority=''
+                else delete task.priority
                 if (task.category) {
                   for (let category of categories) {
                     switch (task.category) {
@@ -53,7 +53,7 @@ export class LoadingService {
                     }
                   }
                 }
-                else task.category=''
+                else delete task.category
               }
               this.tasks$.next(tasks)
               this.priorities$.next(priorities)

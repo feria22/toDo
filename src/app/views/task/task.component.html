@@ -43,16 +43,16 @@
         <!--        priority-->
         <ng-container matColumnDef="priority">
           <th *matHeaderCellDef mat-header-cell mat-sort-header>Prioritet</th>
-          <td class="col-priority" *matCellDef="let task" [ngClass]="{'completed': task.completed, 'without': task.priority.id == null}" mat-cell>
-            {{task.priority.title|| 'Bez prioriteta'}}
+          <td class="col-priority" *matCellDef="let task" [ngClass]="{'completed': task.completed, 'without': task.priority == null}" mat-cell>
+            {{task.priority ?  task.priority.title : 'Bez prioriteta'}}
           </td>
         </ng-container>
 
         <!--        category-->
         <ng-container matColumnDef="category">
           <th *matHeaderCellDef mat-header-cell mat-sort-header>Kategoria</th>
-          <td class="col-category" *matCellDef="let task" [ngClass]="{'completed': task.completed, 'without': task.category.id == null}" mat-cell>
-            {{task.category.title || 'Bez categorji'}}
+          <td class="col-category" *matCellDef="let task" [ngClass]="{'completed': task.completed, 'without':  task.category == null }" mat-cell>
+            {{task.category ? task.category.title: 'Bez kategorji'}}
           </td>
         </ng-container>
 
