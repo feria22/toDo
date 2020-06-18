@@ -10,6 +10,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {EditTaskDialogComponent} from "../../dialog/edit-task-dialog/edit-task-dialog.component";
 import {HttpService} from "../../services/http.service";
 import {BehaviorSubject} from "rxjs";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-task',
@@ -41,7 +42,8 @@ export class TaskComponent implements OnInit {
   constructor(
     private load: LoadingService,
     private dialog: MatDialog,
-    private http: HttpService
+    private http: HttpService,
+    private matSnack:MatSnackBar
   ) {
   }
 
@@ -114,6 +116,7 @@ export class TaskComponent implements OnInit {
           this.tasks$.next(this.tasks)
           this.refreshTable()
         })
+        this.openSnackBar('Zadanie zostało usunięte ')
         return;
       }
       if (result as Task) {
@@ -121,6 +124,7 @@ export class TaskComponent implements OnInit {
             console.log(value, 'editName'),
           error =>  console.log(error, 'editName')
         )
+        this.openSnackBar('Zadanie zostało zmienione')
         return;
       }
     });
@@ -130,5 +134,11 @@ export class TaskComponent implements OnInit {
     // console.log($event)
     this.paginatorX = $event.pageIndex * $event.pageSize
   }
-
+  openSnackBar(message:string){
+    this.matSnack.open(message,' ',{
+      duration: 100000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+    })
+  }
 }

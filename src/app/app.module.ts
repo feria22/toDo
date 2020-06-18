@@ -22,7 +22,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatOptionModule, MatNativeDateModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
 import {MatDatepickerModule} from "@angular/material/datepicker";
-import { ConfirmDeleteComponent } from './dialog/confirm-delete/confirm-delete.component';
+import {ConfirmDeleteComponent } from './dialog/confirm-delete/confirm-delete.component';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 const Materialize = [
   MatProgressSpinnerModule,
@@ -39,7 +40,7 @@ const Materialize = [
   MatSelectModule,
   MatDatepickerModule,
   MatNativeDateModule,
-
+  MatSnackBarModule
 ]
 @NgModule({
   declarations: [
