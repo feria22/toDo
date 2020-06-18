@@ -6,6 +6,9 @@ import {Category} from "../../model/category";
 import {Priority} from "../../model/priority";
 import {LoadingService} from "../../services/loading.service";
 import {Observer, Observable} from "rxjs";
+import {ConfirmDeleteComponent} from "../confirm-delete/confirm-delete.component";
+import {log} from "util";
+import {TaskComponent} from "../../views/task/task.component";
 
 
 @Component({
@@ -22,7 +25,8 @@ export class EditTaskDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) private data: [Task, string], // data from parent component for dialog window
     private http:HttpService,
     private dialog: MatDialog, //for opening new dialog window
-    private load :LoadingService
+    private load :LoadingService,
+
 ) {
     this.minDate = new Date(Date());
   }
@@ -73,5 +77,16 @@ export class EditTaskDialogComponent implements OnInit {
     this.dialogRef.close(null);
   }
 
+onDelete(){
+    const dialogDelRef=this.dialog.open(
+      ConfirmDeleteComponent,
+      {data:['Potwierdź działanie',`Czy na pewno chcesz usunąć zadanie: " ${this.task.title} "`]}
+      )
+    dialogDelRef.afterClosed().subscribe(result=> {
+        if (result) {
+          this.dialogRef.close('delete');
+        }
+      })
+}
 
 }

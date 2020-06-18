@@ -4,7 +4,7 @@ import {Observable} from "rxjs";
 import {Category} from "../model/category";
 import {Task} from "../model/task";
 import {stringify} from "querystring";
-import {map, catchError} from "rxjs/operators";
+import {map, catchError, tap} from "rxjs/operators";
 import {log} from "util";
 import {LoadingService} from "./loading.service";
 import {newArray} from "@angular/compiler/src/util";
@@ -31,13 +31,22 @@ export class HttpService {
     if (task.category) _task.category = task.category.id
     // console.log('updateTask 2',task, _task)
     let httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.http.put(`api/tasks/${task.id}`, _task, {
+    return this.http.put(`api/tasks/${task.id}`, _task
+      , {
       headers: httpHeaders,
       observe: 'response'
-    }).pipe(
+    }
+    ).pipe(
       map(res => res.status)
     );
 
+  }
+  deleteTask (task: Task){
+    console.log('deleteTask',task.id)
+    return this.http.delete(`api/tasks/${task.id}`).pipe(
+      // map(res => res),
+      tap(()=>console.log('deleteTask tap',task.id))
+    );
   }
 
   addTask(task) {

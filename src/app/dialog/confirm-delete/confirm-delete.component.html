@@ -1,0 +1,22 @@
+<mat-dialog-content>
+  <h1 mat-dialog-title>{{dialogTitle}}</h1>
+  <div mat-dialog-content>
+  <p>{{message}}</p>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+
+  <button
+    (click)="onConfirm()"
+    class="card-header-warning"
+    color="primary"
+    mat-raised-button
+  >
+    Ok
+  </button>
+
+
+  <button (click)="onCancel()" mat-raised-button>Cofnąć</button>
+
+
+</mat-dialog-actions>

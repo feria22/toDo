@@ -9,6 +9,7 @@ import {MatSort} from "@angular/material/sort";
 import {MatDialog} from "@angular/material/dialog";
 import {EditTaskDialogComponent} from "../../dialog/edit-task-dialog/edit-task-dialog.component";
 import {HttpService} from "../../services/http.service";
+import {BehaviorSubject} from "rxjs";
 
 @Component({
   selector: 'app-task',
@@ -18,6 +19,7 @@ import {HttpService} from "../../services/http.service";
 export class TaskComponent implements OnInit {
 
   tasks: Task[]
+  tasks$ = new BehaviorSubject<Task[]>([])
   taskForView: Task[]
   isLoading: boolean = true
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category'];
@@ -47,13 +49,16 @@ export class TaskComponent implements OnInit {
   ngOnInit(): void {
     this.load.tasks$.subscribe((tasks) => {
       this.dataSource = new MatTableDataSource(tasks)
-      this.tasks = tasks
-      this.taskForView = this.tasks
       this.isLoading = false
+      this.tasks$.next(tasks)
       // console.log(tasks)
     })
     this.load.categoryId.subscribe(id => {
       this.filterForTask(id)
+    })
+    this.tasks$.subscribe(tasks => {
+      this.tasks = tasks
+      this.taskForView = this.tasks
     })
   }
 
@@ -102,8 +107,21 @@ export class TaskComponent implements OnInit {
     const dialogRef = this.dialog.open(EditTaskDialogComponent, {data: [task, 'Edycja zadania'], autoFocus: false});
 
     dialogRef.afterClosed().subscribe(result => {
+      if (result=='delete') {
+        this.http.deleteTask(task).subscribe(value=> {
+          this.tasks = this.tasks.filter(item=>item.id !== task.id)
+          console.log('delete', this.tasks)
+          this.tasks$.next(this.tasks)
+          this.refreshTable()
+        })
+        return;
+      }
       if (result as Task) {
-        this.http.updateTask(result).subscribe()
+        this.http.updateTask(result).subscribe(value =>
+            console.log(value, 'editName'),
+          error =>  console.log(error, 'editName')
+        )
+        return;
       }
     });
   }
@@ -112,4 +130,5 @@ export class TaskComponent implements OnInit {
     // console.log($event)
     this.paginatorX = $event.pageIndex * $event.pageSize
   }
+
 }
