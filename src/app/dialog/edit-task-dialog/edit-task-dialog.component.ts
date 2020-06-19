@@ -70,7 +70,7 @@ export class EditTaskDialogComponent implements OnInit {
     else delete  this.task.date
 
     this.dialogRef.close(this.task);
-    console.log(this.task)
+    // console.log(this.task)
 
   }
 

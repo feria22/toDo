@@ -42,10 +42,10 @@ export class HttpService {
 
   }
   deleteTask (task: Task){
-    console.log('deleteTask',task.id)
+    // console.log('deleteTask',task.id)
     return this.http.delete(`api/tasks/${task.id}`).pipe(
       // map(res => res),
-      tap(()=>console.log('deleteTask tap',task.id))
+      // tap(()=> console.log('deleteTask tap',task.id))
     );
   }
 

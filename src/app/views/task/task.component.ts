@@ -9,7 +9,7 @@ import {MatSort} from "@angular/material/sort";
 import {MatDialog} from "@angular/material/dialog";
 import {EditTaskDialogComponent} from "../../dialog/edit-task-dialog/edit-task-dialog.component";
 import {HttpService} from "../../services/http.service";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ConfirmDeleteComponent} from "../../dialog/confirm-delete/confirm-delete.component";
 
@@ -21,13 +21,14 @@ import {ConfirmDeleteComponent} from "../../dialog/confirm-delete/confirm-delete
 export class TaskComponent implements OnInit {
 
   tasks: Task[]
-  tasks$ = new BehaviorSubject<Task[]>([])
+  tasks$ = new Subject<Task[]>()
   taskForView: Task[]
   isLoading: boolean = true
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category','delete','update','toggle'];
   sort: MatSort
   dataSource: MatTableDataSource<Task>;
   paginatorX: number = 0;
+  selectedCategoryId: number = null
 
   @ViewChild(MatPaginator, {static: false}) private paginator: MatPaginator;
 
@@ -53,26 +54,36 @@ export class TaskComponent implements OnInit {
     this.load.tasks$.subscribe((tasks) => {
       this.dataSource = new MatTableDataSource(tasks)
       this.isLoading = false
+      this.tasks= tasks
       this.tasks$.next(tasks)
-      // console.log(tasks)
+      // console.log(' ngOnInit load.tasks$', tasks)
     })
     this.load.categoryId.subscribe(id => {
-      // console.log('categoryId.subscribe tasks',id)
-      this.filterForTask(id)
+      this.selectedCategoryId=id
+      // console.log('ngOnInit  categoryId.subscribe tasks',id)
+      this.onFilterForTask(this.selectedCategoryId)
     })
     this.tasks$.subscribe(tasks => {
-      this.tasks = tasks
-      this.taskForView = this.tasks
+      this.tasks=tasks;
+      this.filterForTask(this.selectedCategoryId)
+      // console.log('ngOnInit  tasks$.subscribe', this.tasks)
+
     })
+    // console.log(this.tasks,this.taskForView)
+  }
+  onFilterForTask(id?: number){
+    this.filterForTask(id)
+    // this.tasks$.next(this.taskForView)
   }
 
   filterForTask(id?: number) {
     // console.log('filterForTask',id)
-    if (id === 0) this.taskForView = this.tasks.filter(x => {
-     return  x.category === undefined
+    if (id === null) this.taskForView = this.tasks
+    else if (id === 0) this.taskForView = this.tasks.filter(x => {
+      return  x.category === undefined
     })
-    else if (id === null) this.taskForView = this.tasks
     else this.taskForView = this.tasks.filter(x => x.category?.id === id)
+    // this.tasks$.next(this.taskForView)
     this.refreshTable()
   }
 
@@ -85,6 +96,7 @@ export class TaskComponent implements OnInit {
   }
 
   private refreshTable() {
+    // console.log('refreshTable', this.dataSource.data)
     this.dataSource.data = this.taskForView;
     this.addTableObj();
   }
@@ -142,7 +154,7 @@ export class TaskComponent implements OnInit {
     })
   }
 
-  onDelete(task: any) {
+  onDelete(task: Task) {
     const dialogRef=this.dialog.open(ConfirmDeleteComponent,
       {
         data:[
@@ -158,16 +170,19 @@ export class TaskComponent implements OnInit {
    deleteTask (task: Task) {
     this.http.deleteTask(task).subscribe(value=> {
       this.tasks = this.tasks.filter(item=>item.id !== task.id)
-      console.log('delete', this.tasks)
+
+      // console.log('delete', this.tasks)
       this.tasks$.next(this.tasks)
-      this.refreshTable()
+      // this.refreshTable()
+      // console.log('deleteTask 1', this.tasks,this.taskForView)
+
     })
     this.openSnackBar('Zadanie zostało usunięte ')
-
+     // console.log('deleteTask 2', this.tasks,this.taskForView)
   }
   updateTask(task: Task){
     this.http.updateTask(task).subscribe(value =>
-        console.log(value, 'editName'),
+        // console.log(value, 'editName'),
       error =>  console.log(error, 'editName')
     )
     this.openSnackBar('Zadanie zostało zmienione')

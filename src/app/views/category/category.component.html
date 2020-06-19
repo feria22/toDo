@@ -9,7 +9,7 @@
     <ul class="nav">
       <li class="nav-item" (click)="onCategoryClick()" [class.active]="selectedCategoryId===null">
         <a class="nav-link" href="#">
-        <p>Wszystko</p>
+        <p>Wszystko </p>
         </a>
       </li>
       <li
@@ -17,6 +17,7 @@
         [class.card-header-warning]="category.id===selectedCategoryId"
         *ngFor="let category of categories "
         (click)="onCategoryClick(category)"
+
       >
         <a class="nav-link" href="#" >
           <p>{{category.title}}</p>
