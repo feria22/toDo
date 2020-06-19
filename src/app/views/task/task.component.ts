@@ -11,6 +11,7 @@ import {EditTaskDialogComponent} from "../../dialog/edit-task-dialog/edit-task-d
 import {HttpService} from "../../services/http.service";
 import {BehaviorSubject} from "rxjs";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {ConfirmDeleteComponent} from "../../dialog/confirm-delete/confirm-delete.component";
 
 @Component({
   selector: 'app-task',
@@ -23,7 +24,7 @@ export class TaskComponent implements OnInit {
   tasks$ = new BehaviorSubject<Task[]>([])
   taskForView: Task[]
   isLoading: boolean = true
-  displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category'];
+  displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category','delete','update','toggle'];
   sort: MatSort
   dataSource: MatTableDataSource<Task>;
   paginatorX: number = 0;
@@ -56,6 +57,7 @@ export class TaskComponent implements OnInit {
       // console.log(tasks)
     })
     this.load.categoryId.subscribe(id => {
+      // console.log('categoryId.subscribe tasks',id)
       this.filterForTask(id)
     })
     this.tasks$.subscribe(tasks => {
@@ -64,8 +66,12 @@ export class TaskComponent implements OnInit {
     })
   }
 
-  filterForTask(id: number) {
-    if (id === 0) this.taskForView = this.tasks
+  filterForTask(id?: number) {
+    // console.log('filterForTask',id)
+    if (id === 0) this.taskForView = this.tasks.filter(x => {
+     return  x.category === undefined
+    })
+    else if (id === null) this.taskForView = this.tasks
     else this.taskForView = this.tasks.filter(x => x.category?.id === id)
     this.refreshTable()
   }
@@ -106,25 +112,19 @@ export class TaskComponent implements OnInit {
   }
 
   editName(task: Task) {
-    const dialogRef = this.dialog.open(EditTaskDialogComponent, {data: [task, 'Edycja zadania'], autoFocus: false});
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {
+      data: [task, 'Edycja zadania'],
+      autoFocus: false,
+      minWidth:"500px"
+    });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result=='delete') {
-        this.http.deleteTask(task).subscribe(value=> {
-          this.tasks = this.tasks.filter(item=>item.id !== task.id)
-          console.log('delete', this.tasks)
-          this.tasks$.next(this.tasks)
-          this.refreshTable()
-        })
-        this.openSnackBar('Zadanie zostało usunięte ')
+        this.deleteTask(task)
         return;
       }
       if (result as Task) {
-        this.http.updateTask(result).subscribe(value =>
-            console.log(value, 'editName'),
-          error =>  console.log(error, 'editName')
-        )
-        this.openSnackBar('Zadanie zostało zmienione')
+        this.updateTask(result)
         return;
       }
     });
@@ -136,9 +136,50 @@ export class TaskComponent implements OnInit {
   }
   openSnackBar(message:string){
     this.matSnack.open(message,' ',{
-      duration: 100000,
+      duration: 800,
       horizontalPosition: 'end',
       verticalPosition: 'top',
     })
   }
+
+  onDelete(task: any) {
+    const dialogRef=this.dialog.open(ConfirmDeleteComponent,
+      {
+        data:[
+          'Potwierdź działanie',
+          `Czy na pewno chcesz usunąć zadanie: " ${task.title} "`
+        ],
+      });
+    dialogRef.afterClosed().subscribe(result=> {
+        if (result) this.deleteTask(task)
+      })
+  }
+
+   deleteTask (task: Task) {
+    this.http.deleteTask(task).subscribe(value=> {
+      this.tasks = this.tasks.filter(item=>item.id !== task.id)
+      console.log('delete', this.tasks)
+      this.tasks$.next(this.tasks)
+      this.refreshTable()
+    })
+    this.openSnackBar('Zadanie zostało usunięte ')
+
+  }
+  updateTask(task: Task){
+    this.http.updateTask(task).subscribe(value =>
+        console.log(value, 'editName'),
+      error =>  console.log(error, 'editName')
+    )
+    this.openSnackBar('Zadanie zostało zmienione')
+  }
+  onComplete(task: Task) {
+    task.completed=!task.completed;
+    this.updateTask(task)
+  }
+
+  onCategory(id?: number) {
+   if (id) this.load.categoryId.next(id)
+   else this.load.categoryId.next(0)
+  }
 }
+

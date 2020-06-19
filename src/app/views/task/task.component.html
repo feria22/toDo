@@ -43,7 +43,7 @@
         <!--        priority-->
         <ng-container matColumnDef="priority">
           <th *matHeaderCellDef mat-header-cell mat-sort-header>Prioritet</th>
-          <td class="col-priority" *matCellDef="let task" [ngClass]="{'completed': task.completed, 'without': task.priority == null}" mat-cell>
+          <td class="col-priority" *matCellDef="let task" [ngClass]="{'completed': task.completed, 'without': task.priority?.id == null}" mat-cell>
             {{task.priority ?  task.priority.title : 'Bez prioriteta'}}
           </td>
         </ng-container>
@@ -51,8 +51,33 @@
         <!--        category-->
         <ng-container matColumnDef="category">
           <th *matHeaderCellDef mat-header-cell mat-sort-header>Kategoria</th>
-          <td class="col-category" *matCellDef="let task" [ngClass]="{'completed': task.completed, 'without':  task.category == null }" mat-cell>
+          <td class="col-category" *matCellDef="let task" [ngClass]="{'completed': task.completed, 'without':  task.category?.id == null }" mat-cell (click)="onCategory(task.category?.id)">
             {{task.category ? task.category.title: 'Bez kategorji'}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+          <th *matHeaderCellDef mat-header-cell></th>
+          <td  *matCellDef="let task" mat-cell>
+            <button mat-icon-button (click)="onDelete(task)">
+            <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="update">
+          <th *matHeaderCellDef mat-header-cell></th>
+          <td  *matCellDef="let task" mat-cell>
+            <button mat-icon-button (click)="editName(task)">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="toggle">
+          <th *matHeaderCellDef mat-header-cell></th>
+          <td  *matCellDef="let task" mat-cell >
+            <mat-checkbox [checked]="task.completed" (change)="onComplete(task)"></mat-checkbox>
           </td>
         </ng-container>
 

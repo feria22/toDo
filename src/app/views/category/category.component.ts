@@ -12,8 +12,7 @@ export class CategoryComponent implements OnInit {
 
 
   categories: Category[]
-  selectedCategory: Category
-  // activeId:number
+  selectedCategoryId: number = null
   constructor(
     private load: LoadingService,
     // private tasks: TaskComponent
@@ -24,13 +23,20 @@ export class CategoryComponent implements OnInit {
         this.categories = categories
       }
     )
+    this.load.categoryId.subscribe(id=>{
+      // console.log('categoryId.subscribe',id)
+      if(id&&(id!==0)) this.selectedCategoryId = id
+      else if (id===0) this.selectedCategoryId=0
+      else this.selectedCategoryId=null
+    })
+    // console.log('ngOnInit', this.selectedCategoryId)
   }
 
   onCategoryClick(category?:Category) {
     if (category !== undefined) {
-      this.selectedCategory = category
       this.load.categoryId.next(category.id)
     }
-    else this.load.categoryId.next(0)
+    else this.load.categoryId.next(null)
+    // console.log('onCategoryClick',category)
   }
 }

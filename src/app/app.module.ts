@@ -24,6 +24,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {ConfirmDeleteComponent } from './dialog/confirm-delete/confirm-delete.component';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 const Materialize = [
   MatProgressSpinnerModule,
@@ -53,10 +54,11 @@ const Materialize = [
   imports: [
     BrowserModule,
     HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(InMemHeroService,{ dataEncapsulation: false }),
+    HttpClientInMemoryWebApiModule.forRoot(InMemHeroService, {dataEncapsulation: false}),
     BrowserAnimationsModule,
     Materialize,
     FormsModule,
+    MatCheckboxModule,
 
   ],
   // exports:[

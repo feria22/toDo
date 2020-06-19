@@ -34,6 +34,7 @@ export class EditTaskDialogComponent implements OnInit {
   dialogTitle: string;
   task: Task;
   tmpTitle: string;
+  tmpCompleted: boolean;
   categories:Observable<Category[]>=this.load.categories$;
   priorities:Observable<Priority[]>=this.load.priorities$;
   selectedCategory: Event | Category | number
@@ -44,6 +45,7 @@ export class EditTaskDialogComponent implements OnInit {
     this.task = this.data[0]; // task from parent
     this.dialogTitle = this.data[1]; // title from parent
     this.tmpTitle=  this.task.title;
+    this.tmpCompleted= this.task.completed
     this.date = this.task.date
     this.selectedCategory=this.task.category
     this.selectedPriority=this.task.priority
@@ -51,7 +53,7 @@ export class EditTaskDialogComponent implements OnInit {
 
  onConfirm(): void {
     this.task.title = this.tmpTitle;
-
+    this.task.completed=this.tmpCompleted;
     if (this.selectedCategory) {
       if (this.selectedCategory == 0)  delete  this.task.category
       else this.task.category = this.selectedCategory
@@ -68,7 +70,7 @@ export class EditTaskDialogComponent implements OnInit {
     else delete  this.task.date
 
     this.dialogRef.close(this.task);
-    // console.log(this.task)
+    console.log(this.task)
 
   }
 
@@ -89,4 +91,8 @@ onDelete(){
       })
 }
 
+
+  onToggle(task: Task) {
+    this.tmpCompleted=!this.tmpCompleted
+  }
 }

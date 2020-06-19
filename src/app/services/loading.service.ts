@@ -12,7 +12,6 @@ export class LoadingService {
   tasks: Task[]
   priorities: Priority[]
   categories: Category[]
-
   categoryId: Subject<number> = new Subject()
   tasks$: Subject<Task[]> = new Subject();
   priorities$: BehaviorSubject<Priority[]> = new BehaviorSubject([]);
@@ -28,7 +27,7 @@ export class LoadingService {
     let tasks$ = this.http.getAll('tasks')
     let priorities$ = this.http.getAll('priorities')
     let categories$ = this.http.getAll('categories')
-    console.log('loadingData')
+    // console.log('loadingData')
     forkJoin([tasks$, priorities$, categories$])
       .subscribe(( [tasks, priorities, categories] ) => {
               for(let task of tasks ) {
