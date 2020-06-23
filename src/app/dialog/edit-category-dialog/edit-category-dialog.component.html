@@ -1,0 +1,21 @@
+<mat-dialog-content>
+    <h1 mat-dialog-title>{{title}}</h1>
+    <mat-form-field>
+      <mat-label>Nazwa Kategorii</mat-label>
+      <input type="text" matInput [(ngModel)]="tmpCategoryTitle">
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button
+      (click)="onConfirm()"
+      class="card-header-warning"
+      color="primary"
+      mat-raised-button
+    >
+      Zapisz
+    </button>
+    <button (click)="onCancel()" mat-raised-button>Cofnąć</button>
+    <button  color="warn" (click)="onDelete(category)" mat-raised-button>Usunąć</button>
+</mat-dialog-actions>
+
+

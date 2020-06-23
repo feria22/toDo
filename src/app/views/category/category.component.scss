@@ -1,5 +1,44 @@
 
-.card-header-warning {
-  background: linear-gradient(60deg, #ffa726, #fb8c00);
+.pointer {
+  cursor: pointer;
+}
+a{
+  display: flex;
+  flex-wrap:nowrap;
+  justify-content:space-between;
 }
 
+.edit-category-icon-area {
+  width: 15%;
+  display: inline-block;
+  text-align: left;
+  font-size: 13px
+}
+
+.category-title {
+  width: 70%;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.all-category-title {
+  width: 85%;
+  display: inline-block;
+  font-size: 16px;
+}
+.edit-category-icon {
+  color: #dadada;
+}
+
+.uncompleted-count {
+  background-color: #eaeaea;
+  border-radius: 3px;
+  padding: 5px;
+  color: black;
+  width: 15%;
+  display: inline-block;
+  text-align: center;
+}
+.mat-icon-button{
+  height: auto;
+}

@@ -24,14 +24,10 @@ export class HttpService {
     return this.http.get(`api/${nameoFbase}`)
   }
 
-  updateTask(task: Task) {
-    // console.log('updateTask 1', task)
-    let _task = {...task}
-    if (task.priority) _task.priority = task.priority.id
-    if (task.category) _task.category = task.category.id
-    // console.log('updateTask 2',task, _task)
+  update(obj,nameoFbase:string) {
+
     let httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.http.put(`api/tasks/${task.id}`, _task
+    return this.http.put(`api/${nameoFbase}/${obj.id}`, {...obj}
       , {
       headers: httpHeaders,
       observe: 'response'
@@ -41,9 +37,9 @@ export class HttpService {
     );
 
   }
-  deleteTask (task: Task){
-    // console.log('deleteTask',task.id)
-    return this.http.delete(`api/tasks/${task.id}`).pipe(
+  delete (obj,nameoFbase:string){
+  let id = obj.id;
+    return this.http.delete(`api/${nameoFbase}/${id}`).pipe(
       // map(res => res),
       // tap(()=> console.log('deleteTask tap',task.id))
     );

@@ -2,11 +2,11 @@
   <div class="card">
     <div class="card-header card-header-warning">
       <h4 class="card-title">
-        Lista zadań: {{taskForView.length}} of {{tasks.length}}
+        Lista zadań:
       </h4>
     </div>
 
-    <div class="card-body table-responsive" *ngIf="taskForView.length > 0; else notFound">
+    <div class="card-body table-responsive" *ngIf="taskForView?.length > 0; else notFound">
 
       <table class="col-12" [dataSource]="dataSource" mat-table matSort>
 

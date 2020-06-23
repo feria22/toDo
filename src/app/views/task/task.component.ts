@@ -1,15 +1,12 @@
 import {Component, OnInit, Input, ViewChild, AfterViewInit} from '@angular/core';
 import {Task} from "../../model/task";
 import {LoadingService} from "../../services/loading.service";
-import { of } from 'rxjs/internal/observable/of';
-import {CategoryComponent} from "../category/category.component";
 import { MatTableDataSource } from '@angular/material/table';
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatDialog} from "@angular/material/dialog";
 import {EditTaskDialogComponent} from "../../dialog/edit-task-dialog/edit-task-dialog.component";
 import {HttpService} from "../../services/http.service";
-import {BehaviorSubject, Subject} from "rxjs";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ConfirmDeleteComponent} from "../../dialog/confirm-delete/confirm-delete.component";
 
@@ -21,7 +18,7 @@ import {ConfirmDeleteComponent} from "../../dialog/confirm-delete/confirm-delete
 export class TaskComponent implements OnInit {
 
   tasks: Task[]
-  tasks$ = new Subject<Task[]>()
+  // tasks$ = new Subject<Task[]>()
   taskForView: Task[]
   isLoading: boolean = true
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category','delete','update','toggle'];
@@ -55,7 +52,7 @@ export class TaskComponent implements OnInit {
       this.dataSource = new MatTableDataSource(tasks)
       this.isLoading = false
       this.tasks= tasks
-      this.tasks$.next(tasks)
+      this.load.userTasks$.next(tasks)
       // console.log(' ngOnInit load.tasks$', tasks)
     })
     this.load.categoryId.subscribe(id => {
@@ -63,7 +60,7 @@ export class TaskComponent implements OnInit {
       // console.log('ngOnInit  categoryId.subscribe tasks',id)
       this.onFilterForTask(this.selectedCategoryId)
     })
-    this.tasks$.subscribe(tasks => {
+    this.load.userTasks$.subscribe(tasks => {
       this.tasks=tasks;
       this.filterForTask(this.selectedCategoryId)
       // console.log('ngOnInit  tasks$.subscribe', this.tasks)
@@ -84,7 +81,7 @@ export class TaskComponent implements OnInit {
     })
     else this.taskForView = this.tasks.filter(x => x.category?.id === id)
     // this.tasks$.next(this.taskForView)
-    this.refreshTable()
+    if(this.tasks.length) this.refreshTable()
   }
 
   getPriorityColor(task: Task) {
@@ -168,11 +165,13 @@ export class TaskComponent implements OnInit {
   }
 
    deleteTask (task: Task) {
-    this.http.deleteTask(task).subscribe(value=> {
+    this.http.delete(task,'tasks').subscribe(value=> {
       this.tasks = this.tasks.filter(item=>item.id !== task.id)
 
-      // console.log('delete', this.tasks)
-      this.tasks$.next(this.tasks)
+      console.log('delete this.load.userTasks$.next', this.tasks)
+      this.load.userTasks$.next(this.tasks)
+      this.load.tasks$.next(this.tasks)
+
       // this.refreshTable()
       // console.log('deleteTask 1', this.tasks,this.taskForView)
 
@@ -181,7 +180,7 @@ export class TaskComponent implements OnInit {
      // console.log('deleteTask 2', this.tasks,this.taskForView)
   }
   updateTask(task: Task){
-    this.http.updateTask(task).subscribe(value =>
+    this.http.update(task,'tasks').subscribe(value =>
         // console.log(value, 'editName'),
       error =>  console.log(error, 'editName')
     )

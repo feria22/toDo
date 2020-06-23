@@ -25,6 +25,8 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
 import {ConfirmDeleteComponent } from './dialog/confirm-delete/confirm-delete.component';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import { EditCategoryDialogComponent } from './dialog/edit-category-dialog/edit-category-dialog.component';
+import { LoadingService } from './services/loading.service';
 
 const Materialize = [
   MatProgressSpinnerModule,
@@ -49,7 +51,8 @@ const Materialize = [
     CategoryComponent,
     TaskComponent,
     EditTaskDialogComponent,
-    ConfirmDeleteComponent
+    ConfirmDeleteComponent,
+    EditCategoryDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -64,10 +67,12 @@ const Materialize = [
   // exports:[
   //   Materialize
   // ],
-  providers: [],
+  providers: [LoadingService],
   //for dynamic load
   entryComponents:[
-    EditTaskDialogComponent
+    EditTaskDialogComponent,
+    ConfirmDeleteComponent,
+    EditCategoryDialogComponent
   ],
   bootstrap: [AppComponent]
 })

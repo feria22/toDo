@@ -9,18 +9,30 @@
     <ul class="nav">
       <li class="nav-item" (click)="onCategoryClick()" [class.active]="selectedCategoryId===null">
         <a class="nav-link" href="#">
-        <p>Wszystko </p>
+          <span class="all-category-title">Wszystko </span>
+          <span class="uncompleted-count" *ngIf="totalUncompleted>0">{{totalUncompleted}}</span>
         </a>
       </li>
       <li
-        class="nav-item "
-        [class.card-header-warning]="category.id===selectedCategoryId"
-        *ngFor="let category of categories "
+        class="nav-item pointer"
+        [class.active]="category.id===selectedCategoryId"
+        *ngFor="let category of categories ; let index = index"
         (click)="onCategoryClick(category)"
-
+        (mouseleave)="showEditIcon(null)"
+        (mouseenter)="showEditIcon(index)"
       >
-        <a class="nav-link" href="#" >
-          <p>{{category.title}}</p>
+        <a class="nav-link">
+          <span class="category-title">{{category.title}}</span>
+          <span
+            class="edit-category-icon-area"
+            mat-icon-button
+             (click)="$event.stopPropagation(); onEdit(category)"
+          >
+            <mat-icon
+              class="edit-category-icon"
+              *ngIf="indexMouseMove===index">edit</mat-icon>
+          </span>
+          <span class="uncompleted-count" *ngIf="category.uncompleted>0">{{category.uncompleted}}</span>
         </a>
       </li>
     </ul>
