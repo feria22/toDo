@@ -6,7 +6,7 @@
       </h4>
     </div>
 
-    <div class="card-body table-responsive" *ngIf="taskForView?.length > 0; else notFound">
+    <div class="card-body table-responsive" *ngIf="taskForView?.length> 0; else notFound">
 
       <table class="col-12" [dataSource]="dataSource" mat-table matSort>
 
@@ -88,43 +88,6 @@
         <!--  row of table  -->
         <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
 
-        <!--        status-->
-<!--        <ng-container matColumnDef="category">-->
-<!--          <th *matHeaderCellDef mat-header-cell>Status</th>-->
-<!--          <td *matCellDef="let task" [ngClass]="{'completed': task.completed, 'without': task.category.id == null}" mat-cell>-->
-<!--            {{task.category.title || 'Bez categorji'}}-->
-<!--          </td>-->
-<!--        </ng-container>-->
-
-<!--        <thead class="text-warning">-->
-<!--        <th></th>-->
-<!--        <th>Nazwa</th>-->
-<!--        <th>Kiedy</th>-->
-<!--        <th>Prioritet</th>-->
-<!--        <th>Kategoria</th>-->
-<!--        <th>Status</th>-->
-
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        <tr *ngFor="let task of taskForView;let i =index"  [class.completed]="task.completed">-->
-<!--          <td>{{ i+ 1}}</td>-->
-<!--          <td>{{task.title}}</td>-->
-<!--          <td [class.without]="task.date==null"> {{(task.date | date: "dd.MM.yy" )|| 'Bez daty'}}</td>-->
-<!--          <td [class.without]="task.priority.id==null">{{task.priority.title || 'Bez prioriteta'}}</td>-->
-<!--          <td [class.without]="task.category.id==null">{{task.category.title || 'Bez categorji'}}</td>-->
-<!--          <td>-->
-<!--            <div class="form-check">-->
-<!--            <label class="form-check-label">-->
-<!--              <input class="form-check-input" type="checkbox" value="" [checked]="task.completed" (click)="task.completed=!task.completed">-->
-<!--              <span class="form-check-sign">-->
-<!--                <span class="check"></span>-->
-<!--              </span>-->
-<!--            </label>-->
-<!--          </div>-->
-<!--          </td>-->
-
-<!--        </tr>-->
-<!--        </tbody>-->
       </table>
       <mat-paginator  (page)="pageEvent($event)" [pageSizeOptions]="[10,20,50,100]" showFirstLastButtons></mat-paginator>
     </div>

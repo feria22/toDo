@@ -21,7 +21,7 @@ export class HttpService {
   }
 
   getAll(nameoFbase): Observable<any> {
-    return this.http.get(`api/${nameoFbase}`)
+      return this.http.get(`api/${nameoFbase}`)
   }
 
   update(obj,nameoFbase:string) {

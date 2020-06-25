@@ -10,6 +10,7 @@ import {HttpService} from "../../services/http.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ConfirmDeleteComponent} from "../../dialog/confirm-delete/confirm-delete.component";
 
+
 @Component({
   selector: 'app-task',
   templateUrl: './task.component.html',
@@ -18,9 +19,9 @@ import {ConfirmDeleteComponent} from "../../dialog/confirm-delete/confirm-delete
 export class TaskComponent implements OnInit {
 
   tasks: Task[]
-  // tasks$ = new Subject<Task[]>()
   taskForView: Task[]
   isLoading: boolean = true
+
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category','delete','update','toggle'];
   sort: MatSort
   dataSource: MatTableDataSource<Task>;
@@ -44,34 +45,25 @@ export class TaskComponent implements OnInit {
     private http: HttpService,
     private matSnack:MatSnackBar
   ) {
+
   }
 
 
   ngOnInit(): void {
     this.load.tasks$.subscribe((tasks) => {
       this.dataSource = new MatTableDataSource(tasks)
-      this.isLoading = false
       this.tasks= tasks
-      this.load.userTasks$.next(tasks)
-      // console.log(' ngOnInit load.tasks$', tasks)
+      this.taskForView= tasks
+      if(this.selectedCategoryId) this.filterForTask(this.selectedCategoryId)
+      this.isLoading = false
     })
     this.load.categoryId.subscribe(id => {
       this.selectedCategoryId=id
       // console.log('ngOnInit  categoryId.subscribe tasks',id)
-      this.onFilterForTask(this.selectedCategoryId)
-    })
-    this.load.userTasks$.subscribe(tasks => {
-      this.tasks=tasks;
       this.filterForTask(this.selectedCategoryId)
-      // console.log('ngOnInit  tasks$.subscribe', this.tasks)
-
     })
-    // console.log(this.tasks,this.taskForView)
   }
-  onFilterForTask(id?: number){
-    this.filterForTask(id)
-    // this.tasks$.next(this.taskForView)
-  }
+
 
   filterForTask(id?: number) {
     // console.log('filterForTask',id)
@@ -81,7 +73,7 @@ export class TaskComponent implements OnInit {
     })
     else this.taskForView = this.tasks.filter(x => x.category?.id === id)
     // this.tasks$.next(this.taskForView)
-    if(this.tasks.length) this.refreshTable()
+    if(this.tasks?.length) this.refreshTable()
   }
 
   getPriorityColor(task: Task) {
@@ -93,7 +85,6 @@ export class TaskComponent implements OnInit {
   }
 
   private refreshTable() {
-    // console.log('refreshTable', this.dataSource.data)
     this.dataSource.data = this.taskForView;
     this.addTableObj();
   }
@@ -168,8 +159,6 @@ export class TaskComponent implements OnInit {
     this.http.delete(task,'tasks').subscribe(value=> {
       this.tasks = this.tasks.filter(item=>item.id !== task.id)
 
-      console.log('delete this.load.userTasks$.next', this.tasks)
-      this.load.userTasks$.next(this.tasks)
       this.load.tasks$.next(this.tasks)
 
       // this.refreshTable()
@@ -184,6 +173,7 @@ export class TaskComponent implements OnInit {
         // console.log(value, 'editName'),
       error =>  console.log(error, 'editName')
     )
+    this.load.tasks$.next(this.tasks)
     this.openSnackBar('Zadanie zostało zmienione')
   }
   onComplete(task: Task) {

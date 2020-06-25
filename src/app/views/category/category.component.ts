@@ -47,12 +47,12 @@ export class CategoryComponent implements OnInit {
       this.load.categoryId.next(category.id)
     }
     else this.load.categoryId.next(null)
-    // console.log('onCategoryClick',category)
+
   }
 
   showEditIcon(index:number) {
     this.indexMouseMove = index
-    // console.log(index)
+
   }
 
   onEdit(category: Category) {

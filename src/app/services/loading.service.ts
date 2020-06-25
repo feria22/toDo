@@ -1,10 +1,11 @@
-import { Injectable, EventEmitter } from '@angular/core';
-import {forkJoin, Observable, Subject, of, BehaviorSubject, combineLatest} from "rxjs";
+import { Injectable } from '@angular/core';
+import {forkJoin, Observable,  BehaviorSubject, combineLatest, Subject} from "rxjs";
 import {Task} from "../model/task";
 import {Priority} from "../model/priority";
 import {Category} from "../model/category";
 import {HttpService} from "./http.service";
-import {map} from "rxjs/operators";
+import {delay, map} from "rxjs/operators";
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +14,13 @@ export class LoadingService {
   tasks: Task[]
   priorities: Priority[]
   categories: Category[]
-  categoryId: BehaviorSubject<number> = new BehaviorSubject(null);
-  tasks$: BehaviorSubject<Task[]> = new BehaviorSubject([]);
-  userTasks$ :BehaviorSubject<Task[]>= new BehaviorSubject([]);
-  priorities$: BehaviorSubject<Priority[]> = new BehaviorSubject([]);
-  categories$: BehaviorSubject<Category[]>= new BehaviorSubject([]);
 
+  categoryId: BehaviorSubject<number> = new BehaviorSubject(null);
+  tasks$: Subject<Task[]> = new Subject();
+  priorities$: Subject<Priority[]> = new Subject()
+  categories$: Subject<Category[]>= new Subject()
+
+  // BehaviorSubject([]);
   constructor(
     private http:HttpService
 
@@ -30,33 +32,24 @@ export class LoadingService {
     let tasks$ = this.http.getAll('tasks')
     let priorities$ = this.http.getAll('priorities')
     let categories$ = this.http.getAll('categories')
-    console.log('loadingData')
+
+    // console.log('loadingData')
     forkJoin([tasks$, priorities$, categories$])
+      .pipe(
+        delay(500),
+        map(([tasks, priorities, categories])=>{
+          tasks.map(task=>{
+            categories.map(category=>{
+              if((task.category === category.id)) task.category=category
+            })
+            priorities.map(priority=>{
+              if((task.priority === priority.id)) task.priority=priority
+            })
+          })
+          return [tasks, priorities, categories]
+        })
+      )
       .subscribe(( [tasks, priorities, categories] ) => {
-              for(let task of tasks ) {
-                if (task.priority) {
-                  for (let priority of priorities) {
-                    switch (task.priority) {
-                      case priority.id: {
-                        task.priority = priority
-                        break
-                      }
-                    }
-                  }
-                }
-                else delete task.priority
-                if (task.category) {
-                  for (let category of categories) {
-                    switch (task.category) {
-                      case category.id: {
-                        task.category = category
-                        break
-                      }
-                    }
-                  }
-                }
-                else delete task.category
-              }
               this.tasks$.next(tasks)
               this.priorities$.next(priorities)
               this.categories$.next(categories)
