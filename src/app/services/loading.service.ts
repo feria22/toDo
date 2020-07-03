@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import {forkJoin, Observable,  BehaviorSubject, combineLatest, Subject} from "rxjs";
+import {forkJoin, Observable, BehaviorSubject, combineLatest, Subject, AsyncSubject, of, from, interval} from "rxjs";
 import {Task} from "../model/task";
 import {Priority} from "../model/priority";
 import {Category} from "../model/category";
 import {HttpService} from "./http.service";
-import {delay, map} from "rxjs/operators";
+import {delay, map, tap, delayWhen, take, skipUntil, startWith, skip, share, withLatestFrom, debounce} from "rxjs/operators";
+import {log} from "util";
 
 
 @Injectable({
@@ -14,63 +15,52 @@ export class LoadingService {
   tasks: Task[]
   priorities: Priority[]
   categories: Category[]
+  tasks$: Subject<Task[]> = new  Subject()
+  priorities$:  BehaviorSubject <Priority[]> = new  BehaviorSubject([ ])
+  categories$:  BehaviorSubject<Category[]>= new  BehaviorSubject([ ])
 
-  categoryId: BehaviorSubject<number> = new BehaviorSubject(null);
-  tasks$: Subject<Task[]> = new Subject();
-  priorities$: Subject<Priority[]> = new Subject()
-  categories$: Subject<Category[]>= new Subject()
-
-  // BehaviorSubject([]);
   constructor(
     private http:HttpService
-
   ) {
-    this.loadingData()
+   this.loadingData$.subscribe(( [tasks, priorities, categories] ) => {
+     this.tasks$.next(tasks)
+     this.priorities$.next(priorities)
+     this.categories$.next(categories)
+
+   })
   }
 
-  loadingData(){
-    let tasks$ = this.http.getAll('tasks')
-    let priorities$ = this.http.getAll('priorities')
-    let categories$ = this.http.getAll('categories')
+  loadingData$=forkJoin([this.http.getAll('tasks'), this.http.getAll('priorities'), this.http.getAll('categories')])
+      .pipe(take(1),)
 
-    // console.log('loadingData')
-    forkJoin([tasks$, priorities$, categories$])
-      .pipe(
-        delay(500),
-        map(([tasks, priorities, categories])=>{
-          tasks.map(task=>{
-            categories.map(category=>{
-              if((task.category === category.id)) task.category=category
-            })
-            priorities.map(priority=>{
-              if((task.priority === priority.id)) task.priority=priority
+
+  dataMod$: Observable<[Task[],Priority[],Category[]]> = combineLatest <Subject<Task[]>, BehaviorSubject<Priority[]>, BehaviorSubject<Category[]>> ([this.tasks$,this.priorities$,this.categories$])
+    .pipe(
+    skip(2),
+      map(([tasks, priorities, categories])=>{
+        categories.map(category=>category.uncompleted=0)
+        let categoriesId=categories.map(cat=> cat.id)
+        tasks.map(task=>{
+          categories.map(category=>{
+            if(task.category === category.id) task.category=category
+            if ((task.category?.id === category.id) && (!task.completed)) {
+              category.uncompleted++
+              }
+          })
+          if (categoriesId.filter(id=>id===task.category?.id).length === 0) {
+            delete task.category
+          }
+          priorities.map(priority=>{
+            if((task.priority === priority.id)) task.priority=priority
             })
           })
-          return [tasks, priorities, categories]
-        })
-      )
-      .subscribe(( [tasks, priorities, categories] ) => {
-              this.tasks$.next(tasks)
-              this.priorities$.next(priorities)
-              this.categories$.next(categories)
-      })
-  }
+        return [tasks, priorities, categories ]
+      }),
 
-  categoryMod$: Observable<Category[]> =  combineLatest <Observable<Category>,Observable<Task>> ([this.categories$,this.tasks$])
-      .pipe(
-          map((value)=> {
-            let result = value[0].map(item => {
-                let {id, title} = item
-                let {uncompleted} = value[1].reduce((count, data) => {
-                  if ((data.category?.id === id) && (!data.completed)) {
-                    count.uncompleted++
-                  }
-                  return count
-                }, {uncompleted: 0})
-                return {id, title, uncompleted}
-              })
-            return result
-          })
-      )
+    )
+
+
+
+
 
 }

@@ -18,8 +18,6 @@ export class EditCategoryDialogComponent implements OnInit {
     private dialog:MatDialog
 
   ) {
-    console.log('EditCategoryDialogComponent',data)
-
   }
 
   ngOnInit(): void {
@@ -31,7 +29,7 @@ export class EditCategoryDialogComponent implements OnInit {
   onConfirm() {
     this.category.title=this.tmpCategoryTitle
     this.dialogRef.close(this.category)
-    // console.log(this.tmpCategoryTitle,'ok')
+    console.log(this.tmpCategoryTitle,'ok')
   }
 
   onCancel() {

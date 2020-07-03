@@ -5,10 +5,9 @@ import { MatDialog, MAT_DIALOG_DATA,MatDialogRef } from '@angular/material/dialo
 import {Category} from "../../model/category";
 import {Priority} from "../../model/priority";
 import {LoadingService} from "../../services/loading.service";
-import {Observer, Observable} from "rxjs";
+import { Observable} from "rxjs";
 import {ConfirmDeleteComponent} from "../confirm-delete/confirm-delete.component";
-import {log} from "util";
-import {TaskComponent} from "../../views/task/task.component";
+
 
 
 @Component({
@@ -49,6 +48,7 @@ export class EditTaskDialogComponent implements OnInit {
     this.date = this.task.date
     this.selectedCategory=this.task.category
     this.selectedPriority=this.task.priority
+    console.log(this.categories)
   }
 
  onConfirm(): void {

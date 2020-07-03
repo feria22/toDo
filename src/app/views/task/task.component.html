@@ -28,7 +28,7 @@
         <!--        name of task-->
         <ng-container matColumnDef="title" >
           <th *matHeaderCellDef mat-header-cell mat-sort-header >Nazwa</th>
-          <td class="col-name" *matCellDef="let task" [class.completed]="task.completed" mat-cell (click)="editName(task)">
+          <td class="col-name" *matCellDef="let task" [class.completed]="task.completed" mat-cell (click)="onEdit(task)">
             {{task.title}}
           </td>
         </ng-container>
@@ -69,7 +69,7 @@
         <ng-container matColumnDef="update">
           <th *matHeaderCellDef mat-header-cell></th>
           <td  *matCellDef="let task" mat-cell>
-            <button mat-icon-button (click)="editName(task)">
+            <button mat-icon-button (click)="onEdit(task)">
               <mat-icon>edit</mat-icon>
             </button>
           </td>
@@ -89,7 +89,7 @@
         <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
 
       </table>
-      <mat-paginator  (page)="pageEvent($event)" [pageSizeOptions]="[10,20,50,100]" showFirstLastButtons></mat-paginator>
+      <mat-paginator  (page)="pageEvent($event)" [pageSizeOptions]="[5,10,20,50,100]" showFirstLastButtons></mat-paginator>
     </div>
   </div>
 </div>

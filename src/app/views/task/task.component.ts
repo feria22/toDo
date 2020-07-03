@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, ViewChild, AfterViewInit} from '@angular/core';
+import {Component, OnInit, Input, ViewChild, AfterViewInit, Output, EventEmitter, SimpleChanges} from '@angular/core';
 import {Task} from "../../model/task";
 import {LoadingService} from "../../services/loading.service";
 import { MatTableDataSource } from '@angular/material/table';
@@ -9,6 +9,7 @@ import {EditTaskDialogComponent} from "../../dialog/edit-task-dialog/edit-task-d
 import {HttpService} from "../../services/http.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ConfirmDeleteComponent} from "../../dialog/confirm-delete/confirm-delete.component";
+import {Category} from "../../model/category";
 
 
 @Component({
@@ -17,16 +18,25 @@ import {ConfirmDeleteComponent} from "../../dialog/confirm-delete/confirm-delete
   styleUrls: ['./task.component.scss']
 })
 export class TaskComponent implements OnInit {
-
   tasks: Task[]
+  @Input('tasks')
+  set setTasks(tasks: Task[]){
+    if (!tasks) return;
+    this.tasks=tasks
+    this.taskForView=this.tasks
+    if(tasks) this.isLoading = false
+    this.refreshTable()
+    // console.log('set',tasks,this.tasks)
+  }
+  @Output()   selectCategory = new EventEmitter<number>()
+  @Output()  taskEvent = new EventEmitter<[Task,string]>()
+
   taskForView: Task[]
   isLoading: boolean = true
-
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category','delete','update','toggle'];
   sort: MatSort
   dataSource: MatTableDataSource<Task>;
   paginatorX: number = 0;
-  selectedCategoryId: number = null
 
   @ViewChild(MatPaginator, {static: false}) private paginator: MatPaginator;
 
@@ -43,38 +53,16 @@ export class TaskComponent implements OnInit {
     private load: LoadingService,
     private dialog: MatDialog,
     private http: HttpService,
-    private matSnack:MatSnackBar
-  ) {
 
+  ) {
   }
 
 
   ngOnInit(): void {
-    this.load.tasks$.subscribe((tasks) => {
-      this.dataSource = new MatTableDataSource(tasks)
-      this.tasks= tasks
-      this.taskForView= tasks
-      if(this.selectedCategoryId) this.filterForTask(this.selectedCategoryId)
-      this.isLoading = false
-    })
-    this.load.categoryId.subscribe(id => {
-      this.selectedCategoryId=id
-      // console.log('ngOnInit  categoryId.subscribe tasks',id)
-      this.filterForTask(this.selectedCategoryId)
-    })
+    this.dataSource = new MatTableDataSource()
+    this.refreshTable()
   }
 
-
-  filterForTask(id?: number) {
-    // console.log('filterForTask',id)
-    if (id === null) this.taskForView = this.tasks
-    else if (id === 0) this.taskForView = this.tasks.filter(x => {
-      return  x.category === undefined
-    })
-    else this.taskForView = this.tasks.filter(x => x.category?.id === id)
-    // this.tasks$.next(this.taskForView)
-    if(this.tasks?.length) this.refreshTable()
-  }
 
   getPriorityColor(task: Task) {
     if (task.completed) {
@@ -85,14 +73,11 @@ export class TaskComponent implements OnInit {
   }
 
   private refreshTable() {
+    if (!this.dataSource) {
+      return;
+    }
     this.dataSource.data = this.taskForView;
     this.addTableObj();
-  }
-
-  private addTableObj() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator
-    // console.log( this.dataSource)
     this.dataSource.sortingDataAccessor = (item, colName) => {
       switch (colName) {
         case 'title': {
@@ -111,7 +96,12 @@ export class TaskComponent implements OnInit {
     }
   }
 
-  editName(task: Task) {
+  private addTableObj() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator
+  }
+
+  onEdit(task: Task) {
     const dialogRef = this.dialog.open(EditTaskDialogComponent, {
       data: [task, 'Edycja zadania'],
       autoFocus: false,
@@ -120,11 +110,11 @@ export class TaskComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result=='delete') {
-        this.deleteTask(task)
+        this.taskEvent.emit([task,'delete'])
         return;
       }
       if (result as Task) {
-        this.updateTask(result)
+        this.taskEvent.emit([task,'update'])
         return;
       }
     });
@@ -134,13 +124,7 @@ export class TaskComponent implements OnInit {
     // console.log($event)
     this.paginatorX = $event.pageIndex * $event.pageSize
   }
-  openSnackBar(message:string){
-    this.matSnack.open(message,' ',{
-      duration: 800,
-      horizontalPosition: 'end',
-      verticalPosition: 'top',
-    })
-  }
+
 
   onDelete(task: Task) {
     const dialogRef=this.dialog.open(ConfirmDeleteComponent,
@@ -151,39 +135,18 @@ export class TaskComponent implements OnInit {
         ],
       });
     dialogRef.afterClosed().subscribe(result=> {
-        if (result) this.deleteTask(task)
+        if (result) this.taskEvent.emit([task,'delete'])
       })
   }
 
-   deleteTask (task: Task) {
-    this.http.delete(task,'tasks').subscribe(value=> {
-      this.tasks = this.tasks.filter(item=>item.id !== task.id)
-
-      this.load.tasks$.next(this.tasks)
-
-      // this.refreshTable()
-      // console.log('deleteTask 1', this.tasks,this.taskForView)
-
-    })
-    this.openSnackBar('Zadanie zostało usunięte ')
-     // console.log('deleteTask 2', this.tasks,this.taskForView)
-  }
-  updateTask(task: Task){
-    this.http.update(task,'tasks').subscribe(value =>
-        // console.log(value, 'editName'),
-      error =>  console.log(error, 'editName')
-    )
-    this.load.tasks$.next(this.tasks)
-    this.openSnackBar('Zadanie zostało zmienione')
-  }
   onComplete(task: Task) {
     task.completed=!task.completed;
-    this.updateTask(task)
+    this.taskEvent.emit([task,'update'])
   }
 
   onCategory(id?: number) {
-   if (id) this.load.categoryId.next(id)
-   else this.load.categoryId.next(0)
+   if (id) this.selectCategory.emit(id)
+   else this.selectCategory.emit(0)
   }
 }
 

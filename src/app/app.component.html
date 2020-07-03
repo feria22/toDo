@@ -1,5 +1,10 @@
 <div class="wrapper ">
-  <app-category >  </app-category>
+  <app-category
+    [categories]="categories"
+    [selectedCategoryId]="selectedCategoryId"
+    (selectCategory)="onSelectCategory($event)"
+    [totalUncompleted]="totalUncompleted"
+  >  </app-category>
   <div class="main-panel">
     <!-- Navbar -->
 <!--    <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">-->
@@ -138,7 +143,12 @@
 <!--            </div>-->
 <!--          </div>-->
 <!--        </div>-->
-        <app-task ></app-task>
+
+        <app-task
+          [tasks]="taskForView"
+          (selectCategory)="onSelectCategory($event)"
+          (taskEvent)="eventTask($event)"
+        ></app-task>
       </div>
     </div>
   </div>
