@@ -17,7 +17,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {MatIconModule} from "@angular/material/icon";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatOptionModule, MatNativeDateModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
@@ -54,16 +54,17 @@ const Materialize = [
     ConfirmDeleteComponent,
     EditCategoryDialogComponent
   ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(InMemHeroService, {dataEncapsulation: false}),
-    BrowserAnimationsModule,
-    Materialize,
-    FormsModule,
-    MatCheckboxModule,
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        HttpClientInMemoryWebApiModule.forRoot(InMemHeroService, {dataEncapsulation: false}),
+        BrowserAnimationsModule,
+        Materialize,
+        FormsModule,
+        MatCheckboxModule,
+        ReactiveFormsModule,
 
-  ],
+    ],
   // exports:[
   //   Materialize
   // ],

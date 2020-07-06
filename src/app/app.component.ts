@@ -28,10 +28,12 @@ export class AppComponent implements OnInit{
   tasks : Task []
   taskForView: Task[]
   totalUncompleted : number
+  categoriesForView:Category[]
 
   ngOnInit(): void {
     this.load.dataMod$.subscribe(([tasks, priorities, categories])=> {
       this.categories = categories
+      this.categoriesForView=this.categories
       this.priorities = priorities
       this.tasks = tasks
       this.totalUncompleted = this.categories.reduce((sum,item)=> {
@@ -47,7 +49,7 @@ export class AppComponent implements OnInit{
     this.filterForTask($event)
 
   }
-  private filterForTask(id?: number) {
+   filterForTask(id?: number) {
 
     if (id === null) this.taskForView = this.tasks
     else if (id === 0) this.taskForView = this.tasks.filter(x => {
@@ -55,6 +57,10 @@ export class AppComponent implements OnInit{
     })
     else this.taskForView = this.tasks.filter(x => x.category?.id === id)
 
+  }
+   filterForCategory(name?:string){
+    if (name) this.categoriesForView =this.categories.filter(cat=>cat.title.toLowerCase().includes(name.toLowerCase()))
+    else this.categoriesForView =this.categories
   }
 
   eventTask($event: [Task, string]) {

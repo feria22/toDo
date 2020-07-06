@@ -5,8 +5,19 @@
   <div class="logo"><a href="#" class="simple-text logo-normal">
     Kategorie
   </a></div>
+
   <div class="sidebar-wrapper">
+
     <ul class="nav">
+      <div class="search-category-area">
+        <mat-form-field class="example-full-width">
+          <input
+            matInput
+            [(ngModel)]="searchCategory" (keydown.escape)="searchCategory=''"
+            (keyup)="onFilter()"
+            placeholder="Szukaj kategorie">
+        </mat-form-field>
+      </div>
       <li class="nav-item" (click)="onCategoryClick()" [class.active]="selectedCategoryId===null">
         <a class="nav-link" href="#">
           <span class="all-category-title">Wszystko </span>

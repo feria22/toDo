@@ -1,9 +1,10 @@
 <div class="wrapper ">
   <app-category
-    [categories]="categories"
+    [categories]="categoriesForView"
     [selectedCategoryId]="selectedCategoryId"
     (selectCategory)="onSelectCategory($event)"
     [totalUncompleted]="totalUncompleted"
+    (categoryFilter)="filterForCategory($event)"
   >  </app-category>
   <div class="main-panel">
     <!-- Navbar -->

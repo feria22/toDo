@@ -6,6 +6,7 @@ import {EditCategoryDialogComponent} from "../../dialog/edit-category-dialog/edi
 import {HttpService} from "../../services/http.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {log} from "util";
+import {FormControl} from "@angular/forms";
 
 
 @Component({
@@ -17,11 +18,11 @@ export class CategoryComponent implements OnInit {
 
   @Input()  categories : Category[];
   @Input()  selectedCategoryId:number
-  @Output() selectCategory= new EventEmitter<number>()
+  @Output() selectCategory = new EventEmitter<number>()
   @Input()   totalUncompleted:number
+  @Output() categoryFilter = new EventEmitter<string>()
   indexMouseMove:number
-
-
+  searchCategory:string =''
 
 
   constructor(
@@ -85,4 +86,8 @@ export class CategoryComponent implements OnInit {
     })
   }
 
+  onFilter() {
+      this.categoryFilter.emit(this.searchCategory)
+      // console.log('emit',this.searchCategory)
+  }
 }
