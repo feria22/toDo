@@ -1,4 +1,28 @@
 <div class="col-12" *ngIf="!isLoading; else loading">
+  <mat-form-field class="example-full-width">
+    <mat-label>Szukaj zadania</mat-label>
+    <input
+      matInput
+      [(ngModel)]="searchTitle" (keydown.escape)="searchTitle=''"
+      (keyup)="onFilter()"
+      placeholder="Nazwa zadania">
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <mat-label>Stan zadania</mat-label>
+    <mat-select  [(value)]="searchComplete" (valueChange)="onFilter()">
+      <mat-option  value=''>Wszystko</mat-option>
+      <mat-option  value=1>Wykonane zadania</mat-option>
+      <mat-option  value=0>Niedokończone zadania</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <mat-label>Prioritet</mat-label>
+    <mat-select  [(value)]="searchPriority"  (valueChange)="onFilter()">
+      <mat-option  value=''>Wszystko</mat-option>
+      <mat-option *ngFor="let item of priorities"  value={{item.id}}>{{item.title}}</mat-option>
+
+    </mat-select>
+  </mat-form-field>
   <div class="card">
     <div class="card-header card-header-warning">
       <h4 class="card-title">

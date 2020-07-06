@@ -147,8 +147,11 @@
 
         <app-task
           [tasks]="taskForView"
+          [priorities]="priorities"
           (selectCategory)="onSelectCategory($event)"
+          (searchTask)="filterForTask($event)"
           (taskEvent)="eventTask($event)"
+          [clearTasksFilter]="clearTasksFilter.asObservable()"
         ></app-task>
       </div>
     </div>

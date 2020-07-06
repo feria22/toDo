@@ -1,12 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {HttpService} from "./services/http.service";
-import {log} from "util";
 import {LoadingService} from "./services/loading.service";
 import {Category} from "./model/category";
 import {Priority} from "./model/priority";
 import {Task} from "./model/task";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {timeout} from "rxjs/operators";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -29,7 +28,7 @@ export class AppComponent implements OnInit{
   taskForView: Task[]
   totalUncompleted : number
   categoriesForView:Category[]
-
+  clearTasksFilter = new Subject()
   ngOnInit(): void {
     this.load.dataMod$.subscribe(([tasks, priorities, categories])=> {
       this.categories = categories
@@ -39,18 +38,17 @@ export class AppComponent implements OnInit{
       this.totalUncompleted = this.categories.reduce((sum,item)=> {
             return sum + item.uncompleted
           },0)
-      this.filterForTask(this.selectedCategoryId)
+      this.filterForTaskByCategory(this.selectedCategoryId)
       }
     )
   }
 
   onSelectCategory($event: number) {
     this.selectedCategoryId=$event
-    this.filterForTask($event)
-
+    this.filterForTaskByCategory($event)
+    this.clearTasksFilter.next(true)
   }
-   filterForTask(id?: number) {
-
+   filterForTaskByCategory(id: number) {
     if (id === null) this.taskForView = this.tasks
     else if (id === 0) this.taskForView = this.tasks.filter(x => {
       return  x.category === undefined
@@ -72,7 +70,7 @@ export class AppComponent implements OnInit{
 
 
   deleteTask (task: Task) {
-    this.http.delete(task,'tasks').subscribe(value=> {
+    this.http.delete(task,'tasks').subscribe(()=> {
       this.tasks = this.tasks.filter(item=>item.id !== task.id)
       this.load.tasks$.next(this.tasks)
     })
@@ -80,7 +78,7 @@ export class AppComponent implements OnInit{
   }
 
   updateTask(task: Task){
-    this.http.update(task,'tasks').subscribe(value =>
+    this.http.update(task,'tasks').subscribe(() =>
       error =>  console.log(error, 'editName')
     )
     this.load.tasks$.next(this.tasks)
@@ -92,5 +90,24 @@ export class AppComponent implements OnInit{
       horizontalPosition: 'end',
       verticalPosition: 'top',
     })
+  }
+
+
+  filterForTask($event: [string, boolean, number]) {
+
+    let [title,completed,idPriority]=$event
+    this.filterForTaskByCategory(this.selectedCategoryId)
+
+   if (title.length>0) {
+     this.taskForView = this.taskForView.filter(task => task.title.toLowerCase().includes(title.toLowerCase()))
+   }
+    if(completed !==null){
+      this.taskForView = this.taskForView.filter(task => task.completed === completed)
+    }
+
+    if(idPriority !==null) {
+      this.taskForView = this.taskForView.filter(task => task.priority?.id === idPriority)
+    }
+
   }
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, ViewChild, AfterViewInit, Output, EventEmitter, SimpleChanges} from '@angular/core';
+import {Component, OnInit, Input, ViewChild, Output, EventEmitter} from '@angular/core';
 import {Task} from "../../model/task";
 import {LoadingService} from "../../services/loading.service";
 import { MatTableDataSource } from '@angular/material/table';
@@ -6,10 +6,9 @@ import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatDialog} from "@angular/material/dialog";
 import {EditTaskDialogComponent} from "../../dialog/edit-task-dialog/edit-task-dialog.component";
-import {HttpService} from "../../services/http.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {ConfirmDeleteComponent} from "../../dialog/confirm-delete/confirm-delete.component";
-import {Category} from "../../model/category";
+import {Priority} from "../../model/priority";
+import {Observable} from "rxjs";
 
 
 @Component({
@@ -28,16 +27,20 @@ export class TaskComponent implements OnInit {
     this.refreshTable()
     // console.log('set',tasks,this.tasks)
   }
-  @Output()   selectCategory = new EventEmitter<number>()
-  @Output()  taskEvent = new EventEmitter<[Task,string]>()
-
+  @Input () priorities:Priority[]
+  @Output() selectCategory = new EventEmitter<number>()
+  @Output() taskEvent = new EventEmitter<[Task,string]>()
+  @Output() searchTask = new EventEmitter<[string?,boolean?,number?]>()
+  @Input() clearTasksFilter :Observable<boolean>
   taskForView: Task[]
   isLoading: boolean = true
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category','delete','update','toggle'];
   sort: MatSort
   dataSource: MatTableDataSource<Task>;
   paginatorX: number = 0;
-
+  searchTitle:string=''
+  searchComplete:string=''
+  searchPriority:string=''
   @ViewChild(MatPaginator, {static: false}) private paginator: MatPaginator;
 
   // because we have a structural directive
@@ -52,7 +55,6 @@ export class TaskComponent implements OnInit {
   constructor(
     private load: LoadingService,
     private dialog: MatDialog,
-    private http: HttpService,
 
   ) {
   }
@@ -61,6 +63,11 @@ export class TaskComponent implements OnInit {
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource()
     this.refreshTable()
+    this.clearTasksFilter.subscribe(()=>{
+      this.searchTitle =''
+      this.searchComplete =''
+      this.searchPriority =''
+    })
   }
 
 
@@ -147,6 +154,15 @@ export class TaskComponent implements OnInit {
   onCategory(id?: number) {
    if (id) this.selectCategory.emit(id)
    else this.selectCategory.emit(0)
+  }
+
+  onFilter() {
+    let searchCompleteTypeFix:boolean
+    if (this.searchComplete === '1') searchCompleteTypeFix=true
+    else  if (this.searchComplete === '0') searchCompleteTypeFix=false
+    else searchCompleteTypeFix=null
+    let searchPriorityFix : number = this.searchPriority ? +this.searchPriority : null
+  this.searchTask.emit([this.searchTitle,searchCompleteTypeFix,searchPriorityFix])
   }
 }
 
