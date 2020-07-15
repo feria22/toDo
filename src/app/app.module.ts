@@ -27,6 +27,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { EditCategoryDialogComponent } from './dialog/edit-category-dialog/edit-category-dialog.component';
 import { LoadingService } from './services/loading.service';
+import { StatisticsComponent } from './views/statistics/statistics.component';
 
 const Materialize = [
   MatProgressSpinnerModule,
@@ -52,7 +53,8 @@ const Materialize = [
     TaskComponent,
     EditTaskDialogComponent,
     ConfirmDeleteComponent,
-    EditCategoryDialogComponent
+    EditCategoryDialogComponent,
+    StatisticsComponent
   ],
     imports: [
         BrowserModule,

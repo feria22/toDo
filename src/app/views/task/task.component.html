@@ -1,5 +1,6 @@
 <div class="col-12" *ngIf="!isLoading; else loading">
-  <mat-form-field class="example-full-width">
+
+  <mat-form-field class="example-full-width col-12 col-md-3" >
     <mat-label>Szukaj zadania</mat-label>
     <input
       matInput
@@ -7,15 +8,15 @@
       (keyup)="onFilter()"
       placeholder="Nazwa zadania">
   </mat-form-field>
-  <mat-form-field class="example-full-width">
+  <mat-form-field class="example-full-width col-12 col-md-3">
     <mat-label>Stan zadania</mat-label>
     <mat-select  [(value)]="searchComplete" (valueChange)="onFilter()">
-      <mat-option  value=''>Wszystko</mat-option>
+      <mat-option  value=null>Wszystko</mat-option>
       <mat-option  value=1>Wykonane zadania</mat-option>
       <mat-option  value=0>Niedokończone zadania</mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field class="example-full-width">
+  <mat-form-field class="example-full-width col-12 col-md-2">
     <mat-label>Prioritet</mat-label>
     <mat-select  [(value)]="searchPriority"  (valueChange)="onFilter()">
       <mat-option  value=''>Wszystko</mat-option>
@@ -23,6 +24,12 @@
 
     </mat-select>
   </mat-form-field>
+<div class="col-12 col-md-4 mat-form-field">
+  <button mat-icon-button class="col-6" aria-label="clear" (click)="clearTasksFilterFunction()">
+    <mat-icon>clear</mat-icon>
+  </button>
+    <button class="col-6  float-right" mat-raised-button color="primary" (click)="onAddTask()">Dodaj zadanie</button>
+</div>
   <div class="card">
     <div class="card-header card-header-warning">
       <h4 class="card-title">
@@ -30,7 +37,7 @@
       </h4>
     </div>
 
-    <div class="card-body table-responsive" *ngIf="taskForView?.length> 0; else notFound">
+    <div class="card-body table-responsive" *ngIf="tasks?.length> 0; else notFound">
 
       <table class="col-12" [dataSource]="dataSource" mat-table matSort>
 

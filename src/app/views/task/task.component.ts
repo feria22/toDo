@@ -18,29 +18,43 @@ import {Observable} from "rxjs";
 })
 export class TaskComponent implements OnInit {
   tasks: Task[]
-  @Input('tasks')
-  set setTasks(tasks: Task[]){
-    if (!tasks) return;
-    this.tasks=tasks
-    this.taskForView=this.tasks
-    if(tasks) this.isLoading = false
-    this.refreshTable()
-    // console.log('set',tasks,this.tasks)
-  }
+  // @Input('tasks')
+  // set setTasks(tasks: Task[]){
+  //   console.log('set in task',tasks)
+  //   if (!tasks) return;
+  //   this.tasks=tasks
+  //   if(tasks) this.isLoading = false
+  //   this.refreshTable()
+  //
+  // }
+  @Input () tasks$
   @Input () priorities:Priority[]
   @Output() selectCategory = new EventEmitter<number>()
   @Output() taskEvent = new EventEmitter<[Task,string]>()
   @Output() searchTask = new EventEmitter<[string?,boolean?,number?]>()
-  @Input() clearTasksFilter :Observable<boolean>
-  taskForView: Task[]
+  @Input() clearTasksFilter$ :Observable<boolean>
+  @Input ('searchComplete')
+  set  setSearchComplete (item){
+      switch (item){
+        case true: {
+          this.searchComplete = '1';
+          break
+        }
+        case false : {
+          this.searchComplete = '0';
+          break
+        }
+
+      }
+  }
   isLoading: boolean = true
   displayedColumns: string[] = ['color', 'id', 'title', 'date', 'priority', 'category','delete','update','toggle'];
   sort: MatSort
   dataSource: MatTableDataSource<Task>;
   paginatorX: number = 0;
   searchTitle:string=''
-  searchComplete:string=''
-  searchPriority:string=''
+  searchComplete:string
+  searchPriority:string
   @ViewChild(MatPaginator, {static: false}) private paginator: MatPaginator;
 
   // because we have a structural directive
@@ -51,7 +65,6 @@ export class TaskComponent implements OnInit {
     this.addTableObj()
   }
 
-  // private sort: MatSort;
   constructor(
     private load: LoadingService,
     private dialog: MatDialog,
@@ -59,18 +72,25 @@ export class TaskComponent implements OnInit {
   ) {
   }
 
-
   ngOnInit(): void {
+    this.tasks$.subscribe((tasks)=>{
+      this.tasks=tasks
+      if(tasks) this.isLoading = false
+        this.refreshTable()
+    })
     this.dataSource = new MatTableDataSource()
     this.refreshTable()
-    this.clearTasksFilter.subscribe(()=>{
-      this.searchTitle =''
-      this.searchComplete =''
-      this.searchPriority =''
+    this.clearTasksFilter$.subscribe(()=>{
+      this.clearTasksFilterFunction()
     })
   }
 
-
+  clearTasksFilterFunction(){
+    // console.log( 'clearTasksFilterFunction')
+    this.searchTitle =null
+    this.searchComplete =null
+    this.searchPriority =null
+  }
   getPriorityColor(task: Task) {
     if (task.completed) {
       return "#6c757d"; //TODO zrobić const for color
@@ -83,7 +103,7 @@ export class TaskComponent implements OnInit {
     if (!this.dataSource) {
       return;
     }
-    this.dataSource.data = this.taskForView;
+    this.dataSource.data = this.tasks;
     this.addTableObj();
     this.dataSource.sortingDataAccessor = (item, colName) => {
       switch (colName) {
@@ -163,6 +183,35 @@ export class TaskComponent implements OnInit {
     else searchCompleteTypeFix=null
     let searchPriorityFix : number = this.searchPriority ? +this.searchPriority : null
   this.searchTask.emit([this.searchTitle,searchCompleteTypeFix,searchPriorityFix])
+
+  }
+
+  onAddTask() {
+    let newId=Math.max(...this.tasks.map(t=>t.id))+1
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {
+      data: [null, 'Dodaj zadanie',newId],
+      autoFocus: false,
+      minWidth:"500px"
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result as Task) {
+        this.taskEvent.emit([result,'add'])
+        // console.log(result)
+        return;
+      }
+    });
+    class Test{
+      id:number
+      constructor(a) {
+        this.id=a
+      }
+    }
+    // let test2=[{id:7},{id:6}]
+    //
+    // let test =new Test(4)
+    // test2.unshift((test))
+    // console.log(test, test2)
   }
 }
 

@@ -1,0 +1,60 @@
+
+<div class="content" *ngIf="statusOfTasks">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6 col-sm-12"
+           (click)="onClickStatus(true)"
+           [class.clicked]="status"
+
+      >
+        <div class="card card-stats"
+        [class.completed-card]="status"
+        >
+          <div class="card-header card-header-success card-header-icon">
+            <div class="card-icon">
+              <i class="material-icons" *ngIf="!status">sentiment_satisfied</i>
+              <i class="material-icons" *ngIf="status">sentiment_very_satisfied</i>
+            </div>
+            <h2 class="card-title">
+              {{statusOfTasks.completed}}
+              z {{statusOfTasks.completed+statusOfTasks.uncompleted}}
+            </h2>
+            <h2 class="card-title">{{statusOfTasks.completed/(statusOfTasks.completed+statusOfTasks.uncompleted)  | percent}}
+            </h2>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <p class="card-category">Wykonane zadania</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-12"
+           (click)="onClickStatus(false)"
+           [class.clicked]="!status&&status!==null"
+      >
+        <div class="card card-stats"
+             [class.completed-card]="!status&&status!==null">
+          <div class="card-header card-header-danger card-header-icon">
+            <div class="card-icon">
+              <i class="material-icons" *ngIf="status||status===null" >sentiment_dissatisfied</i>
+              <i class="material-icons" *ngIf="!status&&status!==null">sentiment_very_dissatisfied</i>
+            </div>
+
+            <h2 class="card-title">{{statusOfTasks.uncompleted}}
+              z {{statusOfTasks.completed+statusOfTasks.uncompleted}}
+            </h2>
+            <h2 class="card-title">{{statusOfTasks.uncompleted/(statusOfTasks.completed+statusOfTasks.uncompleted) | percent}}
+            </h2>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <p class="card-category">Niedokończone zadania</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

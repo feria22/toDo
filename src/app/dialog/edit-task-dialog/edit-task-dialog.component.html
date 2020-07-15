@@ -2,7 +2,7 @@
 <mat-dialog-content >
   <h1 mat-dialog-title>{{dialogTitle}}</h1>
   <mat-form-field>
-    <mat-label>Nazwa zadamia</mat-label>
+    <mat-label>Nazwa zadania</mat-label>
     <textarea matInput
       #inputTitle
       (keydown.enter)="onConfirm()"
@@ -65,20 +65,26 @@
 
 </mat-dialog-content>
 <mat-dialog-actions>
-  <div class=" col-lg-5 col-12">
+  <div class=" col-lg-6 col-12">
     <button
       (click)="onConfirm()" [disabled]="inputTitle.value.trim().length==0"
-      class="card-header-warning"
+      class="card-header-warning col-5"
       color="primary"
       mat-raised-button
     >
       Zapisz
     </button>
-    <button (click)="onCancel()" mat-raised-button>Cofnąć</button>
+    <button
+      class="col-5"
+      (click)="onCancel()"
+      mat-raised-button
+    >Cofnąć</button>
   </div>
-  <div class="col-lg-7 col-12 ">
+  <div class="col-lg-6 col-12 "
+       *ngIf="data[0]"
+        >
     <button  color="primary" (click)="onToggle(task)" mat-raised-button>{{ task.completed? 'Aktywować' : 'Zakończyć' }}</button>
-    <button  color="warn" (click)="onDelete()" mat-raised-button>Usunąć</button>
+    <button color="warn" (click)="onDelete()" mat-raised-button>Usunąć</button>
 
   </div>
 

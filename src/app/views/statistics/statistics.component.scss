@@ -1,0 +1,14 @@
+.material-icons{
+  animation-duration: 3s;
+}
+.clicked .material-icons{
+  animation-name: click;
+}
+@keyframes click {
+  0%   {transform:scale(1);}
+  50%  {transform:scale(1.5);}
+  100% {transform:scale(1);}
+}
+.completed-card{
+  border: 2px solid grey;
+}

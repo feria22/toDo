@@ -21,7 +21,7 @@ export class EditTaskDialogComponent implements OnInit {
   constructor
 (
     private dialogRef: MatDialogRef<EditTaskDialogComponent>,//for current dialog window
-    @Inject(MAT_DIALOG_DATA) private data: [Task, string], // data from parent component for dialog window
+    @Inject(MAT_DIALOG_DATA)  public data: [Task, string,number], // data from parent component for dialog window
     private http:HttpService,
     private dialog: MatDialog, //for opening new dialog window
     private load :LoadingService,
@@ -41,14 +41,23 @@ export class EditTaskDialogComponent implements OnInit {
   date: Date
 
   ngOnInit() {
-    this.task = this.data[0]; // task from parent
-    this.dialogTitle = this.data[1]; // title from parent
-    this.tmpTitle=  this.task.title;
-    this.tmpCompleted= this.task.completed
-    this.date = this.task.date
-    this.selectedCategory=this.task.category
-    this.selectedPriority=this.task.priority
-    console.log(this.categories)
+    if(this.data[0]) {
+      this.task = this.data[0]; // task from parent
+    }
+    else {
+      // let test = new Task(this.data[2],'',false)
+      this.task = new Task(this.data[2],'',false)
+
+    }
+    // console.log(this.task)
+      this.dialogTitle = this.data[1]; // title from parent
+      this.tmpTitle = this.task.title;
+      this.tmpCompleted = this.task.completed
+      this.date = this.task.date
+      this.selectedCategory = this.task.category
+      this.selectedPriority = this.task.priority
+
+    // console.log(this.task)
   }
 
  onConfirm(): void {

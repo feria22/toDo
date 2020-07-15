@@ -54,6 +54,7 @@ export class LoadingService {
             if((task.priority === priority.id)) task.priority=priority
             })
           })
+        // console.log('dataMod$',tasks)
         return [tasks, priorities, categories ]
       }),
 

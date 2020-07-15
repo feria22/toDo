@@ -28,33 +28,57 @@ export class AppComponent implements OnInit{
   taskForView: Task[]
   totalUncompleted : number
   categoriesForView:Category[]
-  clearTasksFilter = new Subject()
+  clearTasksFilter$ = new Subject()
+  statusOfTasks
+  searchTitle:string=''
+  searchComplete:boolean= null
+  searchIdPriority:number= null
+  tasksEvent= new Subject<Task[]>()
+
   ngOnInit(): void {
     this.load.dataMod$.subscribe(([tasks, priorities, categories])=> {
+      // console.log('app subscribe',tasks)
       this.categories = categories
       this.categoriesForView=this.categories
       this.priorities = priorities
       this.tasks = tasks
-      this.totalUncompleted = this.categories.reduce((sum,item)=> {
-            return sum + item.uncompleted
-          },0)
-      this.filterForTaskByCategory(this.selectedCategoryId)
+      this.totalUncompleted =tasks.length-tasks.filter(task=>task.completed).length
+      this.filterForTask(this.selectedCategoryId)
       }
     )
   }
 
   onSelectCategory($event: number) {
     this.selectedCategoryId=$event
-    this.filterForTaskByCategory($event)
-    this.clearTasksFilter.next(true)
-  }
-   filterForTaskByCategory(id: number) {
-    if (id === null) this.taskForView = this.tasks
-    else if (id === 0) this.taskForView = this.tasks.filter(x => {
-      return  x.category === undefined
-    })
-    else this.taskForView = this.tasks.filter(x => x.category?.id === id)
 
+    this.clearTasksFilter$.next(true)
+    this.searchTitle=null
+    this.searchComplete=null
+    this.searchIdPriority =null
+    this.filterForTask($event)
+
+  }
+   filterForTask(id: number) {
+    if (id === null) this.taskForView = this.tasks
+    else if (id === 0) this.taskForView = this.tasks.filter(task => {
+      return  task.category === undefined
+    })
+     // console.log()
+    else this.taskForView = this.tasks.filter(task => task.category?.id === id)
+     let completed=this.taskForView.filter(task=>task.completed).length
+     let uncompleted=this.taskForView.length-completed
+     this.statusOfTasks= {'completed': completed,'uncompleted': uncompleted}
+     if (this.searchTitle) {
+       this.taskForView = this.taskForView.filter(task => task.title.toLowerCase().includes(this.searchTitle.toLowerCase()))
+     }
+     if(this.searchComplete !==null){
+       this.taskForView = this.taskForView.filter(task => task.completed === this.searchComplete)
+     }
+
+     if(this.searchIdPriority !==null) {
+       this.taskForView = this.taskForView.filter(task => task.priority?.id === this.searchIdPriority)
+     }
+     this.tasksEvent.next(this.taskForView)
   }
    filterForCategory(name?:string){
     if (name) this.categoriesForView =this.categories.filter(cat=>cat.title.toLowerCase().includes(name.toLowerCase()))
@@ -65,6 +89,7 @@ export class AppComponent implements OnInit{
     let [task,event]=$event
     if(event==='delete') this.deleteTask(task)
     if(event==='update') this.updateTask(task)
+    if(event==='add') this.addTask(task)
 
   }
 
@@ -78,7 +103,7 @@ export class AppComponent implements OnInit{
   }
 
   updateTask(task: Task){
-    this.http.update(task,'tasks').subscribe(() =>
+    this.http.update(task,'tasks').subscribe(() =>{},
       error =>  console.log(error, 'editName')
     )
     this.load.tasks$.next(this.tasks)
@@ -93,21 +118,24 @@ export class AppComponent implements OnInit{
   }
 
 
-  filterForTask($event: [string, boolean, number]) {
+  searchEvent($event: [string, boolean, number]) {
+    [this.searchTitle,this.searchComplete,this.searchIdPriority]=$event
+    this.filterForTask(this.selectedCategoryId)
+  }
 
-    let [title,completed,idPriority]=$event
-    this.filterForTaskByCategory(this.selectedCategoryId)
+  searchStatusEvent($event: boolean) {
+    this.searchComplete=$event
+    this.filterForTask(this.selectedCategoryId)
+  }
 
-   if (title.length>0) {
-     this.taskForView = this.taskForView.filter(task => task.title.toLowerCase().includes(title.toLowerCase()))
-   }
-    if(completed !==null){
-      this.taskForView = this.taskForView.filter(task => task.completed === completed)
-    }
-
-    if(idPriority !==null) {
-      this.taskForView = this.taskForView.filter(task => task.priority?.id === idPriority)
-    }
-
+  private addTask(task: Task) {
+    this.http.addTask(task).subscribe(() =>{},
+      error =>  console.log(error, 'addTask')
+    )
+    // console.log(task)
+    this.tasks.unshift(task)
+    // console.log(this.tasks)
+    this.load.tasks$.next(this.tasks)
+    this.openSnackBar('Zadanie zostało dodane')
   }
 }

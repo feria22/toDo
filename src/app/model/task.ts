@@ -13,8 +13,8 @@ import { Category } from "./category";
       this.id = id;
       this.title = title;
       this.completed = completed;
-      this.priority = priority;
-      this.category = category;
-      this.date = date;
+      priority ? this.priority = priority : null
+      category ? this.category = category: null
+      date? this.date = date: null
     }
   }
