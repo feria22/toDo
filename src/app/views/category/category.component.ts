@@ -1,12 +1,10 @@
-import {Component, OnInit, Output, EventEmitter, Input, AfterViewInit, AfterViewChecked, OnChanges} from '@angular/core';
+import {Component, OnInit, Output, EventEmitter, Input} from '@angular/core';
 import {Category} from "../../model/category";
 import {LoadingService} from "../../services/loading.service";
 import {MatDialog} from "@angular/material/dialog";
 import {EditCategoryDialogComponent} from "../../dialog/edit-category-dialog/edit-category-dialog.component";
-import {HttpService} from "../../services/http.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {log} from "util";
-import {FormControl} from "@angular/forms";
+
+
 
 
 @Component({
@@ -28,13 +26,10 @@ export class CategoryComponent implements OnInit {
   constructor(
     private load: LoadingService,
     private dialog: MatDialog,
-    private http: HttpService,
-    private matSnack:MatSnackBar
   ) { }
 
 
   ngOnInit(): void {
-
   }
 
   onCategoryClick(category?:Category) {
@@ -56,25 +51,13 @@ export class CategoryComponent implements OnInit {
     disableClose:true});
 
     dialogRef.afterClosed().subscribe(result=> {
+      if(result === null)  return
       if (result ==='delete') {
         this.eventCategory.next([category,'delete'])
-          // this.http.delete(category,'categories').subscribe(
-          //   value=> {
-          //     this.categories = this.categories.filter(item=>item.id !== category.id)
-          //     this.load.categories$.next(this.categories)
-          //     return;
-          //   })
+        return
       }
       else if (result as Category){
-
-        // this.http.update(result,'categories').subscribe(value => {
-        //   },
-        //   error =>  console.log(error, 'editName')
         this.eventCategory.next([category,'update'])
-        // )
-        // this.openSnackBar('Zadanie zostało zmienione')
-        // this.load.categories$.next(this.categories)
-        // return;
       }
     } )
   }
@@ -82,7 +65,6 @@ export class CategoryComponent implements OnInit {
 
   onFilter() {
       this.categoryFilter.emit(this.searchCategory)
-      // console.log('emit',this.searchCategory)
   }
 
   addCategory() {
@@ -91,10 +73,35 @@ export class CategoryComponent implements OnInit {
       width:'500px',
       disableClose:true});
     dialogRef.afterClosed().subscribe(result=> {
+      if(result === null)  return
       if (result as Category){
         this.eventCategory.next([result,'add'])
-        // console.log('  addCategory',result)
       }
     } )
+  }
+
+  sorting(type: string) {
+    let x:number
+    if (type!=='max') {
+      type === 'az'? x = 1 : x = -1
+      this.categories.sort((a, b) => {
+        let c=a.title.toLowerCase()
+        let d=b.title.toLowerCase()
+        if (c > d)
+          return x
+        else if (c < d) {
+          return -x
+        } else return 0
+      })
+    }
+    else {
+      this.categories.sort((a, b) => {
+        if (a.uncompleted < b.uncompleted)
+          return 1
+        else if (a.uncompleted > b.uncompleted) {
+          return -1
+        } else return 0
+      })
+    }
   }
 }

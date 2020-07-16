@@ -90,7 +90,7 @@
 
         <ng-container matColumnDef="delete">
           <th *matHeaderCellDef mat-header-cell></th>
-          <td  *matCellDef="let task" mat-cell>
+          <td  class="col-icons" *matCellDef="let task" mat-cell>
             <button mat-icon-button (click)="onDelete(task)">
             <mat-icon>delete</mat-icon>
             </button>
@@ -99,7 +99,7 @@
 
         <ng-container matColumnDef="update">
           <th *matHeaderCellDef mat-header-cell></th>
-          <td  *matCellDef="let task" mat-cell>
+          <td   class="col-icons" *matCellDef="let task" mat-cell>
             <button mat-icon-button (click)="onEdit(task)">
               <mat-icon>edit</mat-icon>
             </button>
@@ -107,9 +107,9 @@
         </ng-container>
 
         <ng-container matColumnDef="toggle">
-          <th *matHeaderCellDef mat-header-cell></th>
-          <td  *matCellDef="let task" mat-cell >
-            <mat-checkbox [checked]="task.completed" (change)="onComplete(task)"></mat-checkbox>
+          <th *matHeaderCellDef mat-sort-header></th>
+          <td  class="col-icons" *matCellDef="let task" mat-cell >
+            <mat-checkbox color="primary" [checked]="task.completed" (change)="onComplete(task)"></mat-checkbox>
           </td>
         </ng-container>
 

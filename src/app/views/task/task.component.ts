@@ -87,7 +87,6 @@ export class TaskComponent implements OnInit {
   }
 
   clearTasksFilterFunction(){
-    console.log( 'clearTasksFilterFunction')
     this.searchTitle =null
     this.searchComplete =null
     this.searchPriority =null
@@ -120,6 +119,9 @@ export class TaskComponent implements OnInit {
         }
         case 'category': {
           return item.category ? item.category.title : null;
+        }
+        case 'toggle':{
+          return item.completed
         }
       }
     }

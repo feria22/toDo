@@ -9,8 +9,8 @@ import {ConfirmDeleteComponent} from "../confirm-delete/confirm-delete.component
   styleUrls: ['./edit-category-dialog.component.scss']
 })
 export class EditCategoryDialogComponent implements OnInit {
-  title:string;
-  tmpCategoryTitle:string;
+  title:string
+  tmpCategoryTitle:string
   category: Category
 
   constructor(
@@ -23,10 +23,9 @@ export class EditCategoryDialogComponent implements OnInit {
 
   ngOnInit(): void {
     let [category,title,id]=this.data
-    // this.title = this.data[1]
     this.title=title
     if (category !==null) {
-      this.tmpCategoryTitle = this.category.title
+      this.tmpCategoryTitle = category.title
       this.category = category
     }
     else{
@@ -41,7 +40,7 @@ export class EditCategoryDialogComponent implements OnInit {
   }
 
   onCancel() {
-    this.dialogRef.close('cancel')
+    this.dialogRef.close(null)
   }
 
   onDelete(category:Category) {

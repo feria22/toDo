@@ -18,15 +18,20 @@
 }
 .col-index {
   width: 4%;
+  min-width: 2rem;
 }
+//5+30+15
 .col-name {
-
+  width: 50%;
 }
+
 .col-date,.col-priority,.col-category {
   width: 10%;
   min-width: 90px;
 }
-
+.col-icons{
+  width: 5%;
+}
 .not-found{
     margin:2rem auto;
 

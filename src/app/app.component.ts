@@ -142,29 +142,28 @@ export class AppComponent implements OnInit{
   eventCategory($event: [Category,string]) {
     if ($event[1]==='delete'){
       this.http.delete($event[0],'categories').subscribe(
-        value=> {
+        ()=> {
           this.categories = this.categories.filter(item=>item.id !== $event[0].id)
-          // this.load.categories$.next(this.categories)
-          // return;
+          this.load.categories$.next(this.categories)
         })
-      this.openSnackBar('Zadanie zostało usunięcie')
+      this.openSnackBar('Kategoria została usunięta')
     }
     if ($event[1]==='update'){
-      this.http.update($event[0],'categories').subscribe(value => {
+      this.http.update($event[0],'categories').subscribe(() => {
         },
         error =>  console.log(error, 'editName'))
-
-      this.openSnackBar('Zadanie zostało zmienione')
+      this.load.categories$.next(this.categories)
+      this.openSnackBar('Kategoria została zmieniona')
     }
     if ($event[1]==='add'){
       this.http.add($event[0],'categories').subscribe(() =>{
           this.categories.unshift($event[0])
-          this.openSnackBar('Zadanie zostało dodane')
+          this.load.categories$.next(this.categories)
+          this.openSnackBar('Kategoria została dodana')
 
         },
         error =>  console.log(error, 'addTask')
       )
     }
-    this.load.categories$.next(this.categories)
   }
 }

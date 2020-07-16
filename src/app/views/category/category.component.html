@@ -2,13 +2,13 @@
   <!--
     Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
 -->
-  <div class="logo row">
-    <div  class=" col-8">
+  <div class="logo nav  d-flex justify-content-around">
+    <div >
       <a href="#" class="simple-text logo-normal">
       Kategorie
       </a>
     </div>
-    <div class="col-4">
+    <div>
       <button mat-icon-button  aria-label="add category" (click)="addCategory()">
         <mat-icon>add</mat-icon>
       </button>
@@ -16,24 +16,37 @@
   </div>
 
   <div class="sidebar-wrapper">
-
+    <div class="search-category-area">
+      <mat-form-field class="example-full-width">
+        <mat-label>Szukaj kategorie</mat-label>
+        <input
+          matInput
+          [(ngModel)]="searchCategory" (keydown.escape)="searchCategory=''"
+          (keyup)="onFilter()"
+          placeholder="Nazwa kategorii">
+      </mat-form-field>
+    </div>
     <ul class="nav">
-      <div class="search-category-area">
-        <mat-form-field class="example-full-width">
-          <input
-            matInput
-            [(ngModel)]="searchCategory" (keydown.escape)="searchCategory=''"
-            (keyup)="onFilter()"
-            placeholder="Szukaj kategorie">
-        </mat-form-field>
-      </div>
+
       <li class="nav-item" (click)="onCategoryClick()" [class.active]="selectedCategoryId===null">
         <a class="nav-link" href="#">
           <span class="all-category-title">Wszystko </span>
           <span class="uncompleted-count" *ngIf="totalUncompleted>0">{{totalUncompleted}}</span>
         </a>
       </li>
-      <div class="line"></div>
+      <li>
+        <div class="line d-flex justify-content-around">
+          <button mat-icon-button  aria-label="add category" (click)="sorting('az')">
+            <mat-icon>north</mat-icon>
+          </button>
+          <button mat-icon-button  aria-label="add category" (click)="sorting('za')">
+            <mat-icon>south</mat-icon>
+          </button>
+          <button mat-icon-button  aria-label="add category" (click)="sorting('max')">
+            <mat-icon>event_busy</mat-icon>
+          </button>
+        </div>
+      </li>
       <li
         class="nav-item pointer"
         [class.active]="category.id===selectedCategoryId"
@@ -46,7 +59,6 @@
           <span class="category-title">{{category.title}}</span>
           <span
             class="edit-category-icon-area"
-            mat-icon-button
              (click)="$event.stopPropagation(); onEdit(category)"
           >
             <mat-icon
