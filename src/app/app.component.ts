@@ -129,7 +129,7 @@ export class AppComponent implements OnInit{
   }
 
   private addTask(task: Task) {
-    this.http.addTask(task).subscribe(() =>{},
+    this.http.add(task,'tasks').subscribe(() =>{},
       error =>  console.log(error, 'addTask')
     )
     // console.log(task)
@@ -137,5 +137,34 @@ export class AppComponent implements OnInit{
     // console.log(this.tasks)
     this.load.tasks$.next(this.tasks)
     this.openSnackBar('Zadanie zostało dodane')
+  }
+
+  eventCategory($event: [Category,string]) {
+    if ($event[1]==='delete'){
+      this.http.delete($event[0],'categories').subscribe(
+        value=> {
+          this.categories = this.categories.filter(item=>item.id !== $event[0].id)
+          // this.load.categories$.next(this.categories)
+          // return;
+        })
+      this.openSnackBar('Zadanie zostało usunięcie')
+    }
+    if ($event[1]==='update'){
+      this.http.update($event[0],'categories').subscribe(value => {
+        },
+        error =>  console.log(error, 'editName'))
+
+      this.openSnackBar('Zadanie zostało zmienione')
+    }
+    if ($event[1]==='add'){
+      this.http.add($event[0],'categories').subscribe(() =>{
+          this.categories.unshift($event[0])
+          this.openSnackBar('Zadanie zostało dodane')
+
+        },
+        error =>  console.log(error, 'addTask')
+      )
+    }
+    this.load.categories$.next(this.categories)
   }
 }

@@ -55,6 +55,7 @@ export class TaskComponent implements OnInit {
   searchTitle:string=''
   searchComplete:string
   searchPriority:string
+
   @ViewChild(MatPaginator, {static: false}) private paginator: MatPaginator;
 
   // because we have a structural directive
@@ -86,10 +87,11 @@ export class TaskComponent implements OnInit {
   }
 
   clearTasksFilterFunction(){
-    // console.log( 'clearTasksFilterFunction')
+    console.log( 'clearTasksFilterFunction')
     this.searchTitle =null
     this.searchComplete =null
     this.searchPriority =null
+    this.searchTask.emit([null,null,null])
   }
   getPriorityColor(task: Task) {
     if (task.completed) {
@@ -174,6 +176,7 @@ export class TaskComponent implements OnInit {
   onCategory(id?: number) {
    if (id) this.selectCategory.emit(id)
    else this.selectCategory.emit(0)
+
   }
 
   onFilter() {
@@ -196,22 +199,10 @@ export class TaskComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result as Task) {
+        this.selectCategory.next(null)
         this.taskEvent.emit([result,'add'])
-        // console.log(result)
-        return;
       }
     });
-    class Test{
-      id:number
-      constructor(a) {
-        this.id=a
-      }
-    }
-    // let test2=[{id:7},{id:6}]
-    //
-    // let test =new Test(4)
-    // test2.unshift((test))
-    // console.log(test, test2)
   }
 }
 

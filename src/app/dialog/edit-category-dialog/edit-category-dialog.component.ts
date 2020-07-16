@@ -12,24 +12,32 @@ export class EditCategoryDialogComponent implements OnInit {
   title:string;
   tmpCategoryTitle:string;
   category: Category
+
   constructor(
     private dialogRef : MatDialogRef<EditCategoryDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private data:Category,
+    @Inject(MAT_DIALOG_DATA)  public data:[Category,string,number],
     private dialog:MatDialog
 
   ) {
   }
 
   ngOnInit(): void {
-    this.title = "Edycja kategorii"
-    this.tmpCategoryTitle = this.data.title
-    this.category = this.data
+    let [category,title,id]=this.data
+    // this.title = this.data[1]
+    this.title=title
+    if (category !==null) {
+      this.tmpCategoryTitle = this.category.title
+      this.category = category
+    }
+    else{
+      this.tmpCategoryTitle = ''
+      this.category= new Category(id,'')
+    }
   }
 
   onConfirm() {
     this.category.title=this.tmpCategoryTitle
     this.dialogRef.close(this.category)
-    console.log(this.tmpCategoryTitle,'ok')
   }
 
   onCancel() {

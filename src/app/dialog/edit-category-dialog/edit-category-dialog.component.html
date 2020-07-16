@@ -15,7 +15,7 @@
       Zapisz
     </button>
     <button (click)="onCancel()" mat-raised-button>Cofnąć</button>
-    <button  color="warn" (click)="onDelete(category)" mat-raised-button>Usunąć</button>
+    <button  *ngIf="data[0]" color="warn" (click)="onDelete(category)" mat-raised-button>Usunąć</button>
 </mat-dialog-actions>
 
 

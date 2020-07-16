@@ -1,13 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Category} from "../model/category";
-import {Task} from "../model/task";
-import {stringify} from "querystring";
-import {map, catchError, tap} from "rxjs/operators";
-import {log} from "util";
-import {LoadingService} from "./loading.service";
-import {newArray} from "@angular/compiler/src/util";
+import {map} from "rxjs/operators";
+
 
 @Injectable({
   providedIn: 'root'
@@ -45,9 +40,9 @@ export class HttpService {
     );
   }
 
-  addTask(task) {
-    // console.log(task)
-    return this.http.post(`api/tasks/`, {...task})
+  add (obj,nameoFbase:string) {
+
+    return this.http.post(`api/${nameoFbase}/`, {...obj})
   }
 
 }

@@ -1,10 +1,19 @@
-<div class="sidebar" data-color="purple" data-background-color="white" data-image="../assets/img/sidebar-1.jpg">
+<div class="sidebar" data-color="purple" data-background-color="white" >
   <!--
     Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
 -->
-  <div class="logo"><a href="#" class="simple-text logo-normal">
-    Kategorie
-  </a></div>
+  <div class="logo row">
+    <div  class=" col-8">
+      <a href="#" class="simple-text logo-normal">
+      Kategorie
+      </a>
+    </div>
+    <div class="col-4">
+      <button mat-icon-button  aria-label="add category" (click)="addCategory()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
 
   <div class="sidebar-wrapper">
 
@@ -24,6 +33,7 @@
           <span class="uncompleted-count" *ngIf="totalUncompleted>0">{{totalUncompleted}}</span>
         </a>
       </li>
+      <div class="line"></div>
       <li
         class="nav-item pointer"
         [class.active]="category.id===selectedCategoryId"

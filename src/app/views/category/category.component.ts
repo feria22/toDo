@@ -23,7 +23,7 @@ export class CategoryComponent implements OnInit {
   @Output() categoryFilter = new EventEmitter<string>()
   indexMouseMove:number
   searchCategory:string =''
-
+  @Output() eventCategory=new EventEmitter<[Category,string]>()
 
   constructor(
     private load: LoadingService,
@@ -51,43 +51,50 @@ export class CategoryComponent implements OnInit {
   }
 
   onEdit(category: Category) {
-    const dialogRef=this.dialog.open(EditCategoryDialogComponent, {data: category,
+    const dialogRef=this.dialog.open(EditCategoryDialogComponent, {data: [category,"Edycja kategorii"],
     width:'500px',
     disableClose:true});
 
     dialogRef.afterClosed().subscribe(result=> {
       if (result ==='delete') {
-          this.http.delete(category,'categories').subscribe(
-            value=> {
-              this.categories = this.categories.filter(item=>item.id !== category.id)
-              this.load.categories$.next(this.categories)
-              return;
-            })
+        this.eventCategory.next([category,'delete'])
+          // this.http.delete(category,'categories').subscribe(
+          //   value=> {
+          //     this.categories = this.categories.filter(item=>item.id !== category.id)
+          //     this.load.categories$.next(this.categories)
+          //     return;
+          //   })
       }
       else if (result as Category){
 
-        this.http.update(result,'categories').subscribe(value => {
-          },
-          error =>  console.log(error, 'editName')
-
-        )
-        this.openSnackBar('Zadanie zostało zmienione')
-        this.load.categories$.next(this.categories)
-        return;
+        // this.http.update(result,'categories').subscribe(value => {
+        //   },
+        //   error =>  console.log(error, 'editName')
+        this.eventCategory.next([category,'update'])
+        // )
+        // this.openSnackBar('Zadanie zostało zmienione')
+        // this.load.categories$.next(this.categories)
+        // return;
       }
     } )
   }
 
-  openSnackBar(message:string){
-    this.matSnack.open(message,' ',{
-      duration: 800,
-      horizontalPosition: 'end',
-      verticalPosition: 'top',
-    })
-  }
 
   onFilter() {
       this.categoryFilter.emit(this.searchCategory)
       // console.log('emit',this.searchCategory)
+  }
+
+  addCategory() {
+    let newId=Math.max(...this.categories.map(t=>t.id))+1
+    const dialogRef=this.dialog.open(EditCategoryDialogComponent, {data: [null,"Dodaj kategorie",newId],
+      width:'500px',
+      disableClose:true});
+    dialogRef.afterClosed().subscribe(result=> {
+      if (result as Category){
+        this.eventCategory.next([result,'add'])
+        // console.log('  addCategory',result)
+      }
+    } )
   }
 }
