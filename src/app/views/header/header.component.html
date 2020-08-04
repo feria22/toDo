@@ -1,0 +1,16 @@
+<div class="row container-fluid">
+<div class="col-6">
+  <button
+    mat-icon-button
+    color="primary"
+    aria-label="button menu"
+    (click)="hiddenCatToggle()"
+  >
+    <mat-icon>menu</mat-icon>
+  </button>
+  <button
+    mat-button
+    (click)="hiddenStatToggle()"
+  >{{textForButton}}</button>
+</div>
+</div>

@@ -3,10 +3,20 @@
     <mat-form-field>
       <mat-label>Nazwa Kategorii</mat-label>
       <input type="text" matInput [(ngModel)]="tmpCategoryTitle">
+      <button
+        (click)="tmpCategoryTitle= ''"
+
+        *ngIf="tmpCategoryTitle.trim().length > 0" aria-label="Clear" class="size25" mat-button
+
+        mat-icon-button matSuffix>
+
+        <mat-icon>clear</mat-icon>
+      </button>
     </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button
+      [disabled]="tmpCategoryTitle.trim().length==0"
       (click)="onConfirm()"
       class="card-header-warning"
       color="primary"

@@ -6,11 +6,34 @@ import {Priority} from "./model/priority";
 import {Task} from "./model/task";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Subject} from "rxjs";
+import {animate, state, style, transition, trigger} from "@angular/animations";
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  animations:[
+    trigger('main',[
+      transition('with <=> without',animate('300ms ease-out')),
+      state('with', style({
+          width:'calc(100% - 260px)'})),
+      state('without', style({
+        width: '100%'}))
+    ]),
+    trigger('category',[
+      transition('with <=> without',animate('300ms ease-out')),
+      state('with', style({
+        transform:' translateX(0)',
+        visibility:'visible'
+      })),
+      state('without', style({
+        transform:' translateX(-260px)',
+        visibility:' hidden'
+      }))
+    ]),
+
+  ]
 })
 export class AppComponent implements OnInit{
   constructor(
@@ -34,7 +57,8 @@ export class AppComponent implements OnInit{
   searchComplete:boolean= null
   searchIdPriority:number= null
   tasksEvent= new Subject<Task[]>()
-
+  isHiddenStat:boolean=false
+  mainState='with'
   ngOnInit(): void {
     this.load.dataMod$.subscribe(([tasks, priorities, categories])=> {
       // console.log('app subscribe',tasks)
@@ -165,5 +189,13 @@ export class AppComponent implements OnInit{
         error =>  console.log(error, 'addTask')
       )
     }
+  }
+
+  isHiddenStatEvent($event: boolean) {
+    this.isHiddenStat=$event
+  }
+
+  isHiddenCatEvent() {
+    this.mainState=this.mainState==='with' ? 'without':'with';
   }
 }

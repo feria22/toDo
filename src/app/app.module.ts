@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppComponent } from './app.component';
 import {HttpClientModule} from "@angular/common/http";
 import {HttpClientInMemoryWebApiModule} from "angular-in-memory-web-api";
@@ -28,6 +27,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import { EditCategoryDialogComponent } from './dialog/edit-category-dialog/edit-category-dialog.component';
 import { LoadingService } from './services/loading.service';
 import { StatisticsComponent } from './views/statistics/statistics.component';
+import { HeaderComponent } from './views/header/header.component';
 
 const Materialize = [
   MatProgressSpinnerModule,
@@ -54,7 +54,8 @@ const Materialize = [
     EditTaskDialogComponent,
     ConfirmDeleteComponent,
     EditCategoryDialogComponent,
-    StatisticsComponent
+    StatisticsComponent,
+    HeaderComponent
   ],
     imports: [
         BrowserModule,
@@ -65,7 +66,6 @@ const Materialize = [
         FormsModule,
         MatCheckboxModule,
         ReactiveFormsModule,
-
     ],
   // exports:[
   //   Materialize

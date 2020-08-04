@@ -1,8 +1,5 @@
 import { InMemoryDbService } from 'angular-in-memory-web-api';
-import {Observable} from "rxjs";
-
 export class InMemHeroService implements InMemoryDbService {
-  // @ts-ignore
   createDb() {
     let categories=[
       {id: 1, title: 'Praca'},

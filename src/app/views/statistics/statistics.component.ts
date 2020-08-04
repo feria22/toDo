@@ -6,7 +6,6 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
   styleUrls: ['./statistics.component.scss']
 })
 export class StatisticsComponent implements OnInit{
-
   @Input() statusOfTasks
   @Output() selectStatus= new EventEmitter<boolean>()
   @Input('status')
